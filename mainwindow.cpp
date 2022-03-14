@@ -53,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(&SerialPort::getInstance(), SIGNAL(receive_data(QByteArray)), this, SLOT(on_receive(QByteArray)), Qt::QueuedConnection);
 
+    _serialPort->ask_date();
 
     if (data_time_flag == 1) {
         data_time_flag = 2;
@@ -110,9 +111,6 @@ MainWindow::MainWindow(QWidget *parent)
         ParamManage::getInstance().writeJsonToFile("settings.json");
         updateParameter();
     });
-
-
-
 
     connect(ui->applyButton, &QPushButton::clicked, this, [=] {
         //on apply action, update the Json root and parameter struct and enable the new parameter
@@ -239,12 +237,19 @@ void MainWindow::updateParameter() {
 
 void MainWindow::on_receive(QByteArray tmpdata) {
     qDebug() << "uart get:" << tmpdata.data();
-    if (tmpdata[0] == 0x60) {
-        if (tmpdata[1] == 0xec) {
-           ResultModel* result = static_cast<ResultModel*>(ui->resultView->model());
-           qDebug() << "enter genCamera" << QDateTime::currentDateTime();
-           GenCamera::getInstance().acquireImage(result);
-//            _timerId = startTimer(500);
+
+    if (tmpdata[0] == 0xea) {
+        if (tmpdata[1] == 0x02) {
+            if (tmpdata[2] == 0x80) {
+                ResultModel* result = static_cast<ResultModel*>(ui->resultView->model());
+                qDebug() << "enter genCamera" << QDateTime::currentDateTime();
+                GenCamera::getInstance().acquireImage(result);
+            } else if (tmpdata[2] == 0x00) {
+                qDebug() << "uart send heart";
+                _serialPort->ack_heart();
+            }
+        } else if (tmpdata[1] == 0x0a) {
+            qDebug() << "enter genCamera" << QDateTime::currentDateTime();
         }
     } else if (tmpdata[0] == 0x61) {
         qDebug() << "last" << QDateTime::currentDateTime();

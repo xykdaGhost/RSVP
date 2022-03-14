@@ -1,0 +1,32 @@
+{
+   "aec" : {
+      "expTime_a" : 0,
+      "expTime_b" : 5000,
+      "maxGain" : 5,
+      "minExpTime" : 50,
+      "minGain" : 0,
+      "speed" : 0
+   },
+   "alg" : {
+      "autoExpo" : true,
+      "hdr" : false,
+      "yolo" : false
+   },
+   "camera" : {
+      "gain" : 50,
+      "height" : 1225,
+      "offsetX" : 8,
+      "offsetY" : 0,
+      "path" : "/home/mv/release/datasets-0728-VIPimages",
+      "width" : 2432
+   },
+   "capture" : {
+      "interval" : 1000,
+      "savePath" : "/home/mv/release/install/pics",
+      "saveRaw" : true,
+      "saveRawInterval" : 1000,
+      "saveResInterval" : 5000,
+      "saveResult" : true,
+      "trigger" : false
+   }
+}

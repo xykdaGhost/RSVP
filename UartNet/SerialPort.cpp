@@ -55,22 +55,27 @@ void SerialPort::write_data() {
 void SerialPort::ask_date() {
     qDebug() << "write_id is:" << QThread::currentThreadId();
     QByteArray data;
-    data.resize(4);
-    data[0] = 0x54;
-    data[1] = 0xcc;
+    data.resize(6);
+    data[0] = 0xea;
+    data[1] = 0x02;
     data[2] = 0x00;
-    data[3] = 0x20;
-    port->write(data, 4);
+    data[3] = 0x41;
+    data[4] = 0x41;
+    data[5] = 0xeb;
+    port->write(data, 6);
 }
 
 void SerialPort::ask_shoot() {
     QByteArray data;
-    data.resize(4);
-    data[0] = 0x60;
-    data[1] = 0xed;
+    data.resize(6);
+    data[0] = 0xea;
+    data[1] = 0x02;
     data[2] = 0x00;
-    data[3] = 0x4d;
-    port->write(data, 4);
+    data[3] = 0x90;
+    data[4] = 0x90;
+    data[5] = 0xeb;
+    port->write(data, 6);
+    qDebug() << "ask shoot";
 }
 
 void SerialPort::ack_shoot() {
@@ -83,5 +88,25 @@ void SerialPort::ack_shoot() {
     port->write(data, 4);
     qDebug() << "write_id is:" << QThread::currentThreadId();
     qDebug() << "ack_shoot success";
+
+}
+
+void SerialPort::ack_heart() {
+    QByteArray data;
+    data.resize(6);
+    data[0] = 0xea;
+    data[1] = 0x02;
+    data[2] = 0x80;
+    data[3] = 0x92;
+    data[4] = 0x12;
+    data[5] = 0xeb;
+    port->write(data, 6);
+
+    qDebug() << "heart checked";
+}
+
+
+
+uchar calc(uchar * data) {
 
 }

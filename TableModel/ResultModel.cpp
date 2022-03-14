@@ -1,4 +1,5 @@
 #include "ResultModel.h"
+#include "QColor"
 
 /**
  * @brief Constructor of ResultModel, set the default value of result
@@ -19,6 +20,7 @@ ResultModel::ResultModel(QObject *parent)
     _results.push_back({"总计", 0, 0});
     _results.push_back({"Level",0, 0});
 
+
 }
 
 /**
@@ -31,6 +33,29 @@ ResultModel::ResultModel(QObject *parent)
 QVariant ResultModel::headerData(int section, Qt::Orientation orientation, int role) const {
     //return header data by role
     switch(role) {
+    case Qt::BackgroundRole:
+        if(orientation == Qt::Orientation::Vertical) {
+        } else if(section == 0) {
+            return QColor(255,0,0);
+        } else if(section == 1) {
+            return QColor(0, 255, 0);
+        } else if(section == 2) {
+            return QColor(0, 0, 255);
+        } else if(section == 3) {
+            return QColor(225, 255, 0);
+        } else if(section == 4) {
+            return QColor(225, 0, 225);
+        } else if(section == 5) {
+            return QColor(0, 255, 225);
+        } else if(section == 6) {
+            return QColor(120, 120, 120);
+        } else if(section == 7) {
+            return QColor(0, 120, 0);
+        } else if(section == 8) {
+            return QColor(120, 0, 120);
+        }
+
+        break;
     case Qt::TextAlignmentRole:
         //align center for font
         return Qt::AlignCenter;

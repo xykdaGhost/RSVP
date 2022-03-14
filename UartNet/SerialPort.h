@@ -26,6 +26,7 @@ public slots:
     void ask_date();
     void ask_shoot();
     void ack_shoot();
+    void ack_heart();
 
 signals:
     void receive_data(QByteArray tmp);
