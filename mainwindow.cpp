@@ -239,6 +239,7 @@ void MainWindow::on_receive(QByteArray tmpdata) {
     qDebug() << "uart get:" << tmpdata.data();
 
     if (tmpdata[0] == 0xea) {
+
         if (tmpdata[1] == 0x02) {
             if (tmpdata[2] == 0x80) {
                 ResultModel* result = static_cast<ResultModel*>(ui->resultView->model());
@@ -248,12 +249,30 @@ void MainWindow::on_receive(QByteArray tmpdata) {
                 qDebug() << "uart send heart";
                 _serialPort->ack_heart();
             }
+
         } else if (tmpdata[1] == 0x0a) {
+
             qDebug() << "enter genCamera" << QDateTime::currentDateTime();
+            QDateTime datetime;
+            SYSTEMTIME st;
+            st.wYear = tmpdata[4]*100 + tmpdata[5];
+            st.wMonth = tmpdata[6];
+            st.wDay = tmpdata[7];
+            st.wMinute = tmpdata[9];
+
+            SeSystemTime(&st); 
+
+        } else if (tmpdata[1] == 0x10) {
+            
+            
+
         }
+        
     } else if (tmpdata[0] == 0x61) {
+
         qDebug() << "last" << QDateTime::currentDateTime();
     } else if (tmpdata[0] == 0x53) {
+
         if (tmpdata[1] == 0xdd) {
             if (tmpdata[2] == 0x07) {
 
@@ -262,3 +281,6 @@ void MainWindow::on_receive(QByteArray tmpdata) {
     }
 }
 
+// uchar checkData (char * a) {
+//     int i = 
+// }
