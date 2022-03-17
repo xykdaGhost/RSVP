@@ -1,3 +1,5 @@
+
+
 #include "SerialPort.h"
 
 SerialPort::SerialPort(QObject *parent) : QObject(parent) {
@@ -65,6 +67,19 @@ void SerialPort::ask_date() {
     port->write(data, 6);
 }
 
+void SerialPort::ack_date() {
+    qDebug() << "write_id is:" << QThread::currentThreadId();
+    QByteArray data;
+    data.resize(6);
+    data[0] = 0xea;
+    data[1] = 0x02;
+    data[2] = 0x80;
+    data[3] = 0x40;
+    data[4] = 0xc0;
+    data[5] = 0xeb;
+    port->write(data, 6);
+}
+
 void SerialPort::ask_shoot() {
     QByteArray data;
     data.resize(6);
@@ -110,3 +125,4 @@ void SerialPort::ack_heart() {
 uchar calc(uchar * data) {
 
 }
+

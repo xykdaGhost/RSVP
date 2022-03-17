@@ -235,6 +235,10 @@ void MainWindow::updateParameter() {
 }
 
 
+char BCDtoUINT (char p) {
+    return ((p>>4)*10 + (p&0x0f));
+}
+
 void MainWindow::on_receive(QByteArray tmpdata) {
     qDebug() << "uart get:" << tmpdata.data();
 
@@ -252,15 +256,24 @@ void MainWindow::on_receive(QByteArray tmpdata) {
 
         } else if (tmpdata[1] == 0x0a) {
 
-            qDebug() << "enter genCamera" << QDateTime::currentDateTime();
-            QDateTime datetime;
-            SYSTEMTIME st;
-            st.wYear = tmpdata[4]*100 + tmpdata[5];
-            st.wMonth = tmpdata[6];
-            st.wDay = tmpdata[7];
-            st.wMinute = tmpdata[9];
 
-            SeSystemTime(&st); 
+            QString date = "date -s \"" +
+                            QString::number(BCDtoUINT(tmpdata.data()[4])*100 + BCDtoUINT(tmpdata.data()[5])) + "-" +
+                            QString::number(BCDtoUINT(tmpdata.data()[6])) + "-" +
+                            QString::number(BCDtoUINT(tmpdata.data()[7])) + " " +
+                            QString::number(BCDtoUINT(tmpdata.data()[9])) + ":" +
+                            QString::number(BCDtoUINT(tmpdata.data()[10])) + ":" +
+                            QString::number(BCDtoUINT(tmpdata.data()[11])) + "\"";
+            qDebug() << date;
+
+            QProcess::startDetached(date);
+            QProcess::startDetached("hwclock -w");
+            QProcess::startDetached("sync");
+
+            if (tmpdata[3] == 0x40) {
+                _serialPort->ack_date();
+            }
+
 
         } else if (tmpdata[1] == 0x10) {
             
