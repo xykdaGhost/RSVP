@@ -8,6 +8,7 @@
 #include "TableModel/StatusModel.h"
 #include <QDateTime>
 #include <QStorageInfo>
+#include <QProcess>
 
 int GLOBAL_SPEED = 0;
 char canMessage = 23;
