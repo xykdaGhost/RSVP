@@ -1,5 +1,4 @@
 
-
 #include "SerialPort.h"
 
 SerialPort::SerialPort(QObject *parent) : QObject(parent) {
@@ -120,9 +119,48 @@ void SerialPort::ack_heart() {
     qDebug() << "heart checked";
 }
 
+void SerialPort::ack_mode() {
+    QByteArray data;
+    data.resize(6);
+    data[0] = 0xea;
+    data[1] = 0x02;
+    data[2] = 0x80;
+    data[3] = 0x20;
+    data[4] = 0xa0;
+    data[5] = 0xeb;
+    port->write(data, 6);
 
+    qDebug() << "ack mode";
+}
+
+void SerialPort::ack_param() {
+    QByteArray data;
+    data.resize(6);
+    data[0] = 0xea;
+    data[1] = 0x02;
+    data[2] = 0x80;
+    data[3] = 0x50;
+    data[4] = 0xd0;
+    data[5] = 0xeb;
+    port->write(data, 6);
+
+    qDebug() << "ack param";
+}
+
+void SerialPort::ack_speed() {
+    QByteArray data;
+    data.resize(6);
+    data[0] = 0xea;
+    data[1] = 0x02;
+    data[2] = 0x80;
+    data[3] = 0x80;
+    data[4] = 0x00;
+    data[5] = 0xeb;
+    port->write(data, 6);
+
+    qDebug() << "ack param";
+}
 
 uchar calc(uchar * data) {
 
 }
-

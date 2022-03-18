@@ -6,6 +6,7 @@
 #include "UartNet/SerialPort.h"
 
 extern int GLOBAL_SPEED;
+extern int GLOBAL_YOLO;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

@@ -1,3 +1,5 @@
+
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "JsonWork/ParamManage.h"
@@ -12,6 +14,8 @@
 
 int GLOBAL_SPEED = 0;
 char canMessage = 23;
+int GLOBAL_MODE = 1;
+int GLOBAL_YOLO = 1;
 
 
 /**
@@ -276,9 +280,52 @@ void MainWindow::on_receive(QByteArray tmpdata) {
             }
 
 
-        } else if (tmpdata[1] == 0x10) {
-            
-            
+        } else if (tmpdata[1] == 0x03) {
+            if (tmpdata[3] == 0x20) {
+                if (tmpdata[4] == 0x01) {
+                    //work mode
+                    ui->workModeButton->setEnabled(false);
+                    ui->showModeButton->setEnabled(true);
+                    ui->debugModeButton->setEnabled(true);
+                    _workMode = WORK_MODE::WORK;
+                } else if (tmpdata[4] == 0x02) {
+                    //show mode
+                    ui->showModeButton->setEnabled(false);
+                    ui->workModeButton->setEnabled(true);
+
+                    ui->debugModeButton->setEnabled(true);
+                    _workMode = WORK_MODE::SHOW;
+                } else if (tmpdata[4] == 0x03) {
+                    //debug mode
+                    ui->debugModeButton->setEnabled(false);
+                    ui->workModeButton->setEnabled(true);
+                    ui->showModeButton->setEnabled(true);
+                    _workMode = WORK_MODE::DEBUG;
+                }
+                _serialPort->ack_mode();
+            } else if (tmpdata[3] == 0x10) {
+                if (tmpdata[4] == 0x01) {
+                    ui->playButton->setText("停止");
+
+                    ResultModel* result = static_cast<ResultModel*>(ui->resultView->model());
+                    if (_workMode == WORK_MODE::WORK) {
+                        GLOBAL_YOLO = 1;
+                    } else if (_workMode == WORK_MODE::SHOW) {
+                        FileCamera::getInstance().acquireImage(true, _analysis? ui->analysisWidget : nullptr, result);
+                    } else if (_workMode == WORK_MODE::DEBUG){
+                        GLOBAL_YOLO = 0;
+                    }
+
+                } else if (tmpdata[4] == 0x02) {
+                    ui->playButton->setText("启动");
+                }
+            } else if (tmpdata[3] == 0x80) {
+                GLOBAL_SPEED = tmpdata[4];
+                _serialPort->ack_speed();
+            }
+
+        } else if (tmpdata[1] == 0x0c) {
+            ParamManage::getInstance().model()->paramStruct().aec.expTime_b = (tmpdata[4]*256 + tmpdata[5])*1000;
 
         }
         

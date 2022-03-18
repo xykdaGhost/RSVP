@@ -1,5 +1,4 @@
 
-
 #ifndef SERIALPORT_H
 #define SERIALPORT_H
 #include <QObject>
@@ -30,6 +29,9 @@ public slots:
     void ack_shoot();
     void ack_date();
     void ack_heart();
+    void ack_mode();
+    void ack_param();
+    void ack_speed();
 
 signals:
     void receive_data(QByteArray tmp);
@@ -41,4 +43,3 @@ private:
 };
 
 #endif // SERIALPORT_H
-

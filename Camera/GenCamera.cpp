@@ -22,6 +22,7 @@ static int photo_name_gain = 0;
 static int photo_name_id = 1;
 static int speed = 0;
 
+extern int GLOBAL_YOLO;
 extern int GLOBAL_SPEED;
 
 inline cv::Point getTargetPoint(cv::Point pt_origin, cv::Mat warpMatrix) {
@@ -285,8 +286,9 @@ void GenCamera::acquireImage(ResultModel* model) {
 
         std::vector<std::pair<int, double>> detectRes;
 
+        if (GLOBAL_YOLO) {
         _yoloAlg->handleImage(target, detectRes, photoName, paramManage.model()->paramStruct().capture.savePath + "/" +current_time.toStdString() +
-                              "/res/ylabel/");
+                              "/res/ylabel/");}
 
         //convert the image from bayer to rgb
         cvtColor(image, image, cv::COLOR_BGR2RGB);
@@ -298,10 +300,11 @@ void GenCamera::acquireImage(ResultModel* model) {
         }
 
 
+        if (GLOBAL_YOLO) {
+            model->setData(detectRes);
 
-        model->setData(detectRes);
-
-        CanThread::getInstance().sendRes(detectRes);
+            CanThread::getInstance().sendRes(detectRes);
+        }
 
         emit sendImage(sendimage);
 
