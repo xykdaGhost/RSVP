@@ -1,6 +1,9 @@
 
 #include "SerialPort.h"
 
+extern int GLOBAL_TRASH;
+extern int GLOBAL_TRASH_NUMBER;
+
 SerialPort::SerialPort(QObject *parent) : QObject(parent) {
 
     my_thread = new QThread();
@@ -94,13 +97,16 @@ void SerialPort::ask_shoot() {
 
 void SerialPort::ack_shoot() {
     QByteArray data;
-    data.resize(4);
-    data[0] = 0x61;
-    data[1] = 0xed;
-    data[2] = 0x00;
-    data[3] = 0x4e;
-    port->write(data, 4);
-    qDebug() << "write_id is:" << QThread::currentThreadId();
+    data.resize(6);
+    data[0] = 0xea;
+    data[1] = 0x00;
+    data[2] = 0x80;
+    data[3] = 0x90;
+    data[4] = 0x20;
+    data[5] = 0xeb;
+
+    port->write(data, 6);
+
     qDebug() << "ack_shoot success";
 
 }
@@ -158,7 +164,28 @@ void SerialPort::ack_speed() {
     data[5] = 0xeb;
     port->write(data, 6);
 
-    qDebug() << "ack param";
+    qDebug() << "ack speed";
+}
+
+
+void SerialPort::ack_level() {
+    QByteArray data;
+    data.resize(8);
+    data[0] = 0xea;
+    data[1] = 0x04;
+    data[2] = 0x00;
+    data[3] = 0x62;
+
+
+
+    data[4] = GLOBAL_TRASH_NUMBER;
+    data[5] = GLOBAL_TRASH;
+
+    data[6] = (data[2] + data[3] + data[4] +data[5])%256;
+    data[7] = 0xeb;
+    port->write(data, 8);
+
+    qDebug() << "level is " << data;
 }
 
 uchar calc(uchar * data) {

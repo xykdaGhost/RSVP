@@ -34,6 +34,7 @@ private:
 
     int _trashLevel;
     int getTrashClass();
+    int getTrash();
 };
 
 #endif // RESULTMODEL_H

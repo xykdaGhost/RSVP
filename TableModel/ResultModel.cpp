@@ -1,6 +1,9 @@
 #include "ResultModel.h"
 #include "QColor"
 
+extern int GLOBAL_TRASH;
+extern int GLOBAL_TRASH_NUMBER;
+
 /**
  * @brief Constructor of ResultModel, set the default value of result
  * @param parent : the parent object
@@ -144,6 +147,9 @@ void ResultModel::setData(std::vector<std::pair<int, double>> data) {
    _results[10][1] = _trashLevel;
    _results[10][2] = _trashLevel;
 
+
+   GLOBAL_TRASH_NUMBER = _results[9][1].value<int>();
+   GLOBAL_TRASH = _results[9][2].value<int>();
    emit dataChanged(createIndex(0,0), createIndex(rowCount(), columnCount()));
 }
 
@@ -156,4 +162,10 @@ int ResultModel::getTrashClass(){
     }
     return 1;
 }
+
+int ResultModel::getTrash(){
+
+    return _results[9][2].value<int>();
+}
+
 

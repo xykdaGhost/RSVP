@@ -16,6 +16,8 @@ int GLOBAL_SPEED = 0;
 char canMessage = 23;
 int GLOBAL_MODE = 1;
 int GLOBAL_YOLO = 1;
+int GLOBAL_TRASH = 0;
+int GLOBAL_TRASH_NUMBER = 0;
 
 
 /**
@@ -250,14 +252,20 @@ void MainWindow::on_receive(QByteArray tmpdata) {
     if (tmpdata[0] == 0xea) {
 
         if (tmpdata[1] == 0x02) {
-            if (tmpdata[2] == 0x80) {
-                ResultModel* result = static_cast<ResultModel*>(ui->resultView->model());
-                qDebug() << "enter genCamera" << QDateTime::currentDateTime();
-                GenCamera::getInstance().acquireImage(result);
-            } else if (tmpdata[2] == 0x00) {
-                qDebug() << "uart send heart";
-                _serialPort->ack_heart();
+
+            if (tmpdata[2] == 0x00) {
+
+                if (tmpdata[3] == 0x90) {
+                    ResultModel* result = static_cast<ResultModel*>(ui->resultView->model());
+                    qDebug() << "enter genCamera" << QDateTime::currentDateTime();
+                    GenCamera::getInstance().acquireImage(result);
+                } else if (tmpdata[3] == 0x92) {
+                    qDebug() << "uart send heart";
+                    _serialPort->ack_heart();
+                }
+
             }
+
 
         } else if (tmpdata[1] == 0x0a) {
 
@@ -321,6 +329,8 @@ void MainWindow::on_receive(QByteArray tmpdata) {
                 }
             } else if (tmpdata[3] == 0x80) {
                 GLOBAL_SPEED = tmpdata[4];
+                ParamManage::getInstance().model()->paramStruct().aec.speed = tmpdata[4];
+                qDebug() << GLOBAL_SPEED;
                 _serialPort->ack_speed();
             }
 

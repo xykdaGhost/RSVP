@@ -8,6 +8,9 @@
 #include <QObject>
 #include <QDebug>
 #include <QThread>
+#include "./TreeModel/ParameterModel.h"
+#include "./JsonWork/ParamManage.h"
+#include "./TableModel/ResultModel.h"
 
 class SerialPort : public QObject
 {
@@ -32,6 +35,7 @@ public slots:
     void ack_mode();
     void ack_param();
     void ack_speed();
+    void ack_level();
 
 signals:
     void receive_data(QByteArray tmp);

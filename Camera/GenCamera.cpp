@@ -303,6 +303,8 @@ void GenCamera::acquireImage(ResultModel* model) {
         if (GLOBAL_YOLO) {
             model->setData(detectRes);
 
+            SerialPort::getInstance().ack_level();
+
             CanThread::getInstance().sendRes(detectRes);
         }
 
