@@ -19,6 +19,7 @@ int GLOBAL_YOLO = 1;
 int GLOBAL_TRASH_AMOUNT = 0;
 int GLOBAL_TRASH_DENSITY = 0;
 int GLOBAL_SAVEPICTURE = 1;
+int GLOBAL_STORAGE = 0;
 
 
 /**
@@ -53,6 +54,9 @@ MainWindow::MainWindow(QWidget *parent)
         qDebug() << "fileSystemType:" << storage.fileSystemType();
         qDebug() << "size:" << storage.bytesTotal()/1000/1000/1000 << "GB";
         QString text = tr("%1").arg(storage.bytesAvailable()/1000/1000/1000) + "GB";
+
+        GLOBAL_STORAGE = storage.bytesAvailable()/1000/1000/1000;
+
         qDebug() << "availableSize:" << text;
         _serialPort->ask_shoot();
         ui->sizeLabel->setText(text);

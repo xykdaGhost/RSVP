@@ -10,6 +10,7 @@ extern int GLOBAL_YOLO;
 extern int GLOBAL_TRASH_AMOUNT;
 extern int GLOBAL_SAVEPICTURE;
 extern int GLOBAL_TRASH_DENSITY;
+extern int GLOBAL_STORAGE;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

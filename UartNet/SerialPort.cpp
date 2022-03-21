@@ -1,6 +1,7 @@
 
 #include "SerialPort.h"
 
+extern int GLOBAL_STORAGE;
 
 
 SerialPort::SerialPort(QObject *parent) : QObject(parent) {
@@ -226,7 +227,7 @@ void SerialPort::ack_status() {
     data[16] = 0x00;
 
 
-    data[17] = 0x46;
+    data[17] = GLOBAL_STORAGE%256;
 
     data[18] = 0x10;
     data[19] = 0x20;
