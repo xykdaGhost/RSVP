@@ -7,8 +7,8 @@
 
 extern int GLOBAL_SPEED;
 extern int GLOBAL_YOLO;
-extern int GLOBAL_TRASH;
-extern int GLOBAL_TRASH_NUMBER;
+extern int GLOBAL_TRASH_AMOUNT;
+extern int GLOBAL_TRASH_DENSITY;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

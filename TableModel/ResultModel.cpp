@@ -1,8 +1,8 @@
 #include "ResultModel.h"
 #include "QColor"
 
-extern int GLOBAL_TRASH;
-extern int GLOBAL_TRASH_NUMBER;
+extern int GLOBAL_TRASH_AMOUNT;
+extern int GLOBAL_TRASH_DENSITY;
 
 /**
  * @brief Constructor of ResultModel, set the default value of result

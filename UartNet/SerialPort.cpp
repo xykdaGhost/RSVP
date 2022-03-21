@@ -1,8 +1,8 @@
 
 #include "SerialPort.h"
 
-extern int GLOBAL_TRASH;
-extern int GLOBAL_TRASH_NUMBER;
+extern int GLOBAL_TRASH_AMOUNT;
+extern int GLOBAL_TRASH_DENSITY;
 
 SerialPort::SerialPort(QObject *parent) : QObject(parent) {
 
@@ -178,14 +178,58 @@ void SerialPort::ack_level() {
 
 
 
-    data[4] = GLOBAL_TRASH_NUMBER;
-    data[5] = GLOBAL_TRASH;
+    data[4] = GLOBAL_TRASH_AMOUNT;
+    data[5] = GLOBAL_TRASH_DENSITY;
 
     data[6] = (data[2] + data[3] + data[4] +data[5])%256;
     data[7] = 0xeb;
     port->write(data, 8);
 
     qDebug() << "level is " << data;
+}
+
+void SerialPort::ack_status() {
+    QByteArray data;
+    data.resize(8); 
+
+    data[0] = 0xea;
+    data[1] = 0x23;   
+    data[2] = 0x80;   
+    data[3] = 0x91;   
+    data[4] = 0x02  
+    data[5] = 0x01;   
+    data[6] = 0x01;   
+
+    data[7] = 0xea;   
+    data[8] = 0xea;   
+    data[9] = 0xea;   
+    data[10] = 0xea;   
+    data[11] = 0xea;   
+    data[12] = 0xea;    
+    data[13] = ;
+    data[14] = ;
+    data[15] = ;   
+    data[16] = ;     
+
+
+    data[17] = ;
+
+    data[18] = ;
+    data[19] = ;
+
+    data[20] = ;
+    data[21] = ;
+
+    data[22] = ;
+    data[23] = ;
+    
+    data[24] = ;
+
+
+    data[25] = (data[4]+data[5]+data[6]+data[7]+data[8]+data[9]+data[10]+data[11]+data[12]+data[13]+data[14]+data[15]+data[16]+data[17]+data[18]+data[19]+data[20]+data[21]+data[22]+data[23]+data[24])%256;
+    data[26] = 0xeb;
+
+
 }
 
 uchar calc(uchar * data) {
