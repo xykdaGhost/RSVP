@@ -24,6 +24,7 @@ static int speed = 0;
 
 extern int GLOBAL_YOLO;
 extern int GLOBAL_SPEED;
+extern int GLOBAL_SAVEPICTURE;
 
 inline cv::Point getTargetPoint(cv::Point pt_origin, cv::Mat warpMatrix) {
     cv::Mat_<double> mat_pt(3, 1);
@@ -271,7 +272,7 @@ void GenCamera::acquireImage(ResultModel* model) {
             new_folder_flag = false;
         }
 
-        if(paramManage.model()->paramStruct().capture.saveRaw) {
+        if(GLOBAL_SAVEPICTURE) {
 //            target.convertTo(target, CV_8UC1);
             std::string writeName = paramManage.model()->paramStruct().capture.savePath + "/" + current_time.toStdString() + "/raw/";
             writeName = writeName + photoName + ".png";

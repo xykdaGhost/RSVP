@@ -36,6 +36,8 @@ public slots:
     void ack_param();
     void ack_speed();
     void ack_level();
+    void ack_status();
+    void ack_save();
 
 signals:
     void receive_data(QByteArray tmp);

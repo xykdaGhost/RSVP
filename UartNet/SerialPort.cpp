@@ -1,8 +1,7 @@
 
 #include "SerialPort.h"
 
-extern int GLOBAL_TRASH_AMOUNT;
-extern int GLOBAL_TRASH_DENSITY;
+
 
 SerialPort::SerialPort(QObject *parent) : QObject(parent) {
 
@@ -167,6 +166,20 @@ void SerialPort::ack_speed() {
     qDebug() << "ack speed";
 }
 
+void SerialPort::ack_save() {
+    QByteArray data;
+    data.resize(6);
+    data[0] = 0xea;
+    data[1] = 0x02;
+    data[2] = 0x80;
+    data[3] = 0x70;
+    data[4] = 0xf0;
+    data[5] = 0xeb;
+    port->write(data, 6);
+
+    qDebug() << "ack save";
+}
+
 
 void SerialPort::ack_level() {
     QByteArray data;
@@ -176,7 +189,8 @@ void SerialPort::ack_level() {
     data[2] = 0x00;
     data[3] = 0x62;
 
-
+    extern int GLOBAL_TRASH_AMOUNT;
+    extern int GLOBAL_TRASH_DENSITY;
 
     data[4] = GLOBAL_TRASH_AMOUNT;
     data[5] = GLOBAL_TRASH_DENSITY;
@@ -193,42 +207,46 @@ void SerialPort::ack_status() {
     data.resize(8); 
 
     data[0] = 0xea;
-    data[1] = 0x23;   
+    data[1] = 23;
     data[2] = 0x80;   
-    data[3] = 0x91;   
-    data[4] = 0x02  
+    data[3] = 0x92;
+    data[4] = 0x02;
     data[5] = 0x01;   
     data[6] = 0x01;   
 
-    data[7] = 0xea;   
-    data[8] = 0xea;   
-    data[9] = 0xea;   
-    data[10] = 0xea;   
-    data[11] = 0xea;   
-    data[12] = 0xea;    
-    data[13] = ;
-    data[14] = ;
-    data[15] = ;   
-    data[16] = ;     
+    data[7] = 0x00;
+    data[8] = 0x00;
+    data[9] = 0x00;
+    data[10] = 0x00;
+    data[11] = 0x00;
+    data[12] = 0x00;
+    data[13] = 0x00;
+    data[14] = 0x00;
+    data[15] = 0x00;
+    data[16] = 0x00;
 
 
-    data[17] = ;
+    data[17] = 0x46;
 
-    data[18] = ;
-    data[19] = ;
+    data[18] = 0x10;
+    data[19] = 0x20;
 
-    data[20] = ;
-    data[21] = ;
+    data[20] = 0x12;
+    data[21] = 0x12;
 
-    data[22] = ;
-    data[23] = ;
+    data[22] = 0x20;
+    data[23] = 0x45;
     
-    data[24] = ;
+    data[24] = 0x80;
 
 
-    data[25] = (data[4]+data[5]+data[6]+data[7]+data[8]+data[9]+data[10]+data[11]+data[12]+data[13]+data[14]+data[15]+data[16]+data[17]+data[18]+data[19]+data[20]+data[21]+data[22]+data[23]+data[24])%256;
+    data[25] = (data[2]+data[3]+data[4]+data[5]+data[6]+data[7]+data[8]+data[9]+data[10]+data[11]+data[12]+data[13]+data[14]+data[15]+data[16]+data[17]+data[18]+data[19]+data[20]+data[21]+data[22]+data[23]+data[24])%256;
     data[26] = 0xeb;
 
+    port->write(data, 27);
+
+    qDebug() << "ack status";
+    qDebug() << data;
 
 }
 

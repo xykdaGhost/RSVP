@@ -16,8 +16,9 @@ int GLOBAL_SPEED = 0;
 char canMessage = 23;
 int GLOBAL_MODE = 1;
 int GLOBAL_YOLO = 1;
-int GLOBAL_TRASH = 0;
-int GLOBAL_TRASH_NUMBER = 0;
+int GLOBAL_TRASH_AMOUNT = 0;
+int GLOBAL_TRASH_DENSITY = 0;
+int GLOBAL_SAVEPICTURE = 1;
 
 
 /**
@@ -55,6 +56,8 @@ MainWindow::MainWindow(QWidget *parent)
         qDebug() << "availableSize:" << text;
         _serialPort->ask_shoot();
         ui->sizeLabel->setText(text);
+
+        _serialPort->ack_status();
     });
 
 
@@ -261,7 +264,7 @@ void MainWindow::on_receive(QByteArray tmpdata) {
                     GenCamera::getInstance().acquireImage(result);
                 } else if (tmpdata[3] == 0x92) {
                     qDebug() << "uart send heart";
-                    _serialPort->ack_heart();
+                    _serialPort->ack_status();
                 }
 
             }
@@ -317,7 +320,7 @@ void MainWindow::on_receive(QByteArray tmpdata) {
 
                     ResultModel* result = static_cast<ResultModel*>(ui->resultView->model());
                     if (_workMode == WORK_MODE::WORK) {
-                        GLOBAL_YOLO = 1;
+//                        GLOBAL_YOLO = 1;
                     } else if (_workMode == WORK_MODE::SHOW) {
                         FileCamera::getInstance().acquireImage(true, _analysis? ui->analysisWidget : nullptr, result);
                     } else if (_workMode == WORK_MODE::DEBUG){
@@ -332,6 +335,21 @@ void MainWindow::on_receive(QByteArray tmpdata) {
                 ParamManage::getInstance().model()->paramStruct().aec.speed = tmpdata[4];
                 qDebug() << GLOBAL_SPEED;
                 _serialPort->ack_speed();
+            } else if (tmpdata[3] == 0x70) {
+                if (tmpdata[4] & 0x01) {
+                    GLOBAL_SAVEPICTURE = 1;
+                } else {
+                    GLOBAL_SAVEPICTURE = 0;
+                }
+
+                if (tmpdata[4] & 0x02) {
+                    GLOBAL_YOLO = 1;
+                } else {
+                    GLOBAL_YOLO = 0;
+                }
+
+
+                _serialPort->ack_save();
             }
 
         } else if (tmpdata[1] == 0x0c) {
