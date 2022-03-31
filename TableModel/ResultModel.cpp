@@ -9,15 +9,15 @@
 ResultModel::ResultModel(QObject *parent)
     : QAbstractTableModel(parent) {
     //name-number-density, for the first line, max area-min area
-    _results.push_back({"泥土", 0, 0});
-    _results.push_back({"菜叶", 0, 0});
+    _results.push_back({"泥渍", 0, 0});
     _results.push_back({"树叶", 0, 0});
-    _results.push_back({"织物", 0, 0});
     _results.push_back({"石头", 0, 0});
-    _results.push_back({"果皮", 0, 0});
     _results.push_back({"塑料", 0, 0});
-    _results.push_back({"树枝", 0, 0});
-    _results.push_back({"其他", 0, 0});
+    _results.push_back({"--", 0, 0});
+    _results.push_back({"--", 0, 0});
+    _results.push_back({"--", 0, 0});
+    _results.push_back({"--", 0, 0});
+    _results.push_back({"--", 0, 0});
     _results.push_back({"总计", 0, 0});
     _results.push_back({"Level",0, 0});
 
@@ -37,13 +37,13 @@ QVariant ResultModel::headerData(int section, Qt::Orientation orientation, int r
     case Qt::BackgroundRole:
         if(orientation == Qt::Orientation::Vertical) {
         } else if(section == 0) {
-            return QColor(255,0,0);
+            return QColor(120, 0, 120);
         } else if(section == 1) {
             return QColor(0, 255, 0);
         } else if(section == 2) {
-            return QColor(0, 0, 255);
+            return QColor(0, 255, 225);
         } else if(section == 3) {
-            return QColor(225, 255, 0);
+            return QColor(255,0,0);
         } else if(section == 4) {
             return QColor(225, 0, 225);
         } else if(section == 5) {
@@ -55,7 +55,6 @@ QVariant ResultModel::headerData(int section, Qt::Orientation orientation, int r
         } else if(section == 8) {
             return QColor(120, 0, 120);
         }
-
         break;
     case Qt::TextAlignmentRole:
         //align center for font

@@ -71,6 +71,8 @@ void FileCamera::acquireImage(bool dir, QTableWidget* widget, ResultModel* model
 
         cvtColor(image, image, cv::COLOR_BGR2RGB);
         std::vector<std::pair<int, double>> detectRes;
+
+        std::cout<<"Ready to enter Yolo"<<std::endl;
         _yoloAlg->handleImage(image, detectRes, _dirList[_fileNum].left(_dirList[_fileNum].size() - 4).toStdString(), paramManage.model()->paramStruct().capture.savePath +
                               "/res/ylabel/");
 

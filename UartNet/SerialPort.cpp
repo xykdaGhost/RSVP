@@ -1,4 +1,3 @@
-
 #include "SerialPort.h"
 
 extern int GLOBAL_STORAGE;
