@@ -12,7 +12,7 @@
 #include <QStorageInfo>
 #include <QProcess>
 
-int GLOBAL_SPEED = 0;
+int GLOBAL_SPEED = 5;
 char canMessage = 23;
 int GLOBAL_MODE = 1;
 int GLOBAL_YOLO = 1;

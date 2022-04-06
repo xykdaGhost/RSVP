@@ -234,8 +234,8 @@ vector<float> AutoExposure::getMyNextExpTime(Mat& img, float speed){
     calhiststatics(img);
     vector<float> a{ currExpTime,currGain,0 };
     float nextExpTime, nextGain, maxExpTime;
-    if (speed > 0.01) maxExpTime = 3.6 / speed;//±ÜÃâ³ýÊýÎª0
-    else maxExpTime = 3.6;//Ÿ²Ö¹µÄ×îŽóÆØ¹â
+    if (speed > 0.01) maxExpTime = 10 / speed;//±ÜÃâ³ýÊýÎª0
+    else maxExpTime = 2;//Ÿ²Ös¹µÄ×îŽóÆØ¹â
 
     //meanStdDev(img, ave, stddev); //ave.at<double>(0, 0)
     float ave = mean(img)[0];

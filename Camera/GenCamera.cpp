@@ -20,7 +20,7 @@ static bool new_folder_flag = true;
 static int photo_name_expo_time = 0;
 static int photo_name_gain = 0;
 static int photo_name_id = 1;
-static int speed = 0;
+static int speed = 5;
 
 extern int GLOBAL_YOLO;
 extern int GLOBAL_SPEED;
@@ -323,11 +323,14 @@ void GenCamera::acquireImage(ResultModel* model) {
         //
         photo_name_expo_time = aecRes[0]*1000;
         photo_name_gain = (int)aecRes[1];
-        cout<<"exptime:aaaa:"<<aecRes[0]*1000<<endl;
+        qDebug() <<"exptime:aaaa:"<<aecRes[0]*1000<<endl;
         setExposure(aecRes[0]*1000);
         setGain((int)aecRes[1]);
+        //setExposure(2000);
+        //setGain(0);
         //
         setFixWhiteBalance(aecRes[2]>0.01?false:true);
+        qDebug() <<"balance:aaaa:"<<aecRes[2];
         //
 
         auto t2 = std::chrono::steady_clock::now();
