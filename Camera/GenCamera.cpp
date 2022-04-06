@@ -246,14 +246,18 @@ void GenCamera::acquireImage(ResultModel* model) {
 
         std::string photoName = current_time.toStdString() + "_"
                 + QString("%1").arg(photo_name_id, 5, 'g', -1, '0').toStdString()
-                + "_" + QString("e%1").arg(photo_name_expo_time, 5,10).toStdString()
-                + "_" + QString("g%1").arg(photo_name_gain, 5,10).toStdString()
+                + "_" + "e" + std::to_string(photo_name_expo_time)
+                + "_" + "g" + std::to_string(photo_name_gain)
                 + "_" + QString("s%1").arg(GLOBAL_SPEED, 3,10).toStdString()
                 + "_" + QString("t%1").arg(paramManage.model()->paramStruct().capture.saveRawInterval).toStdString()
                 + "_" +QString("x%1").arg(lp,4,10).toStdString()
                 + "_" +QString("y%1").arg(ly,4,10).toStdString()
                 + "_" +QString("w%1").arg(2432-2*lp, 4,10).toStdString()
                 + "_" +QString("h%1").arg(minmax(r1.y-r2.y,2,dly-ly),4,10).toStdString();
+
+        //<date>_<hour>_<minute>_<XXXXX(order)>_<eXXXX(expo time)>_<gXXX(gain)>_<sXX(speed)>_<tXXXX(interval)>
+        //20220226_17_01_00394_e 3600_g   86_s  0_t1000_x 302_y 329_w1828_h 895.png
+
 
 
 
