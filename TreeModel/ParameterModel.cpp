@@ -168,3 +168,7 @@ void ParameterModel::setupJsonStruct() {
     _parameter.capture.saveResInterval = rootItem->child(2)->child(5)->data(1).toInt();
     _parameter.capture.saveResult = rootItem->child(2)->child(6)->data(1).toBool();
 }
+
+TreeItem* ParameterModel::getRootItem() {
+    return rootItem;
+}

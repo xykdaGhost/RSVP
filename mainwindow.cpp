@@ -342,8 +342,11 @@ void MainWindow::on_receive(QByteArray tmpdata) {
             } else if (tmpdata[3] == 0x70) {
                 if (tmpdata[4] & 0x01) {
                     GLOBAL_SAVEPICTURE = 1;
+                    ParamManage::getInstance().model()->getRootItem()->child(2)->child(3)->setData(true, 1);
+
                 } else {
                     GLOBAL_SAVEPICTURE = 0;
+                    ParamManage::getInstance().model()->getRootItem()->child(2)->child(3)->setData(false, 1);
                 }
 
                 if (tmpdata[4] & 0x02) {

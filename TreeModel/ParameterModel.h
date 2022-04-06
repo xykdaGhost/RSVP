@@ -8,12 +8,14 @@
 class ParameterModel : public TreeModel
 {
 public:
+    TreeItem* getRootItem();
     ParameterModel(const Json::Value root, QObject *parent = nullptr);
     ~ParameterModel() override;
 
     void setupModelData(const Json::Value root) override;
     void setupJsonData(Json::Value& root);
     void setupJsonStruct();
+
 
     struct Parameter {
             struct Aec {

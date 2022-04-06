@@ -28,6 +28,7 @@ public:
 
     virtual void setupModelData(const Json::Value root) = 0;
 
+
 protected:
     TreeItem *rootItem;
 };
