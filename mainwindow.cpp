@@ -307,7 +307,6 @@ void MainWindow::on_receive(QByteArray tmpdata) {
                     //show mode
                     ui->showModeButton->setEnabled(false);
                     ui->workModeButton->setEnabled(true);
-
                     ui->debugModeButton->setEnabled(true);
                     _workMode = WORK_MODE::SHOW;
                 } else if (tmpdata[4] == 0x03) {
@@ -363,7 +362,9 @@ void MainWindow::on_receive(QByteArray tmpdata) {
             ParamManage::getInstance().model()->paramStruct().aec.expTime_b = (tmpdata[4]*256 + tmpdata[5])*1000;
 
         }
-        
+            qDebug() << "recev param";
+            
+
     } else if (tmpdata[0] == 0x61) {
 
         qDebug() << "last" << QDateTime::currentDateTime();
