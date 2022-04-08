@@ -248,8 +248,8 @@ void GenCamera::acquireImage(ResultModel* model) {
                 + QString("%1").arg(photo_name_id, 5, 'g', -1, '0').toStdString()
                 + "_" + "e" + std::to_string(photo_name_expo_time)
                 + "_" + "g" + std::to_string(photo_name_gain)
-                + "_" + QString("s%1").arg(GLOBAL_SPEED, 3,10).toStdString()
-                + "_" + QString("t%1").arg(paramManage.model()->paramStruct().capture.saveRawInterval).toStdString()
+                + "_" + "s" + std::to_string(GLOBAL_SPEED)
+                + "_" + "t4000"
                 + "_" +QString("x%1").arg(lp,4,10).toStdString()
                 + "_" +QString("y%1").arg(ly,4,10).toStdString()
                 + "_" +QString("w%1").arg(2432-2*lp, 4,10).toStdString()

@@ -336,7 +336,7 @@ void MainWindow::on_receive(QByteArray tmpdata) {
             } else if (tmpdata[3] == 0x80) {
                 GLOBAL_SPEED = tmpdata[4];
                 ParamManage::getInstance().model()->paramStruct().aec.speed = tmpdata[4];
-                ParamManage::getInstance().model()->getRootItem()->child(0)->child(4)->setData(root["aec"]["speed"].asInt(), 1);
+                ParamManage::getInstance().model()->getRootItem()->child(0)->child(4)->setData(GLOBAL_SPEED, 1);
 
                 qDebug() << GLOBAL_SPEED;
                 _serialPort->ack_speed();
