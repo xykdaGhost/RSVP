@@ -232,8 +232,12 @@ void MainWindow::timerEvent(QTimerEvent *event)
     ResultModel* result = static_cast<ResultModel*>(ui->resultView->model());
     if(event->timerId() == _timerId)
     {
-        if(_workMode == WORK_MODE::SHOW)
+
+        qDebug() << "mannul";
+        if(_workMode == WORK_MODE::SHOW){
+            qDebug() << "mannul filecamera";
             FileCamera::getInstance().acquireImage(true, _analysis? ui->analysisWidget : nullptr, result);
+        }
         else
             GenCamera::getInstance().acquireImage(result);
     }
@@ -323,7 +327,7 @@ void MainWindow::on_receive(QByteArray tmpdata) {
 
                     ResultModel* result = static_cast<ResultModel*>(ui->resultView->model());
                     if (_workMode == WORK_MODE::WORK) {
-//                        GLOBAL_YOLO = 1;
+                        GLOBAL_YOLO = 1;
                     } else if (_workMode == WORK_MODE::SHOW) {
                         FileCamera::getInstance().acquireImage(true, _analysis? ui->analysisWidget : nullptr, result);
                     } else if (_workMode == WORK_MODE::DEBUG){
@@ -362,9 +366,10 @@ void MainWindow::on_receive(QByteArray tmpdata) {
 
         } else if (tmpdata[1] == 0x0c) {
             ParamManage::getInstance().model()->paramStruct().aec.expTime_b = (tmpdata[4]*256 + tmpdata[5])*1000;
+            ParamManage::getInstance().model()->getRootItem()->child(2)->child(4)->setData(tmpdata[9]*256+tmpdata[10], 1);
 
         }
-            qDebug() << "recev param";
+
             
 
     } else if (tmpdata[0] == 0x61) {
