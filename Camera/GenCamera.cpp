@@ -168,11 +168,11 @@ void GenCamera::acquireImage(ResultModel* model) {
             {
 
                 // Execute the software trigger. Wait up to 1000 ms for the camera to be ready for trigger.
-                if (_camera->WaitForFrameTriggerReady(1000, TimeoutHandling_ThrowException))
+                if (_camera->WaitForFrameTriggerReady(500, TimeoutHandling_ThrowException))
                 {
                     _camera->ExecuteSoftwareTrigger();
                     qDebug() << "start grab" <<QDateTime::currentDateTime();
-                    _camera->RetrieveResult(10000, ptr, TimeoutHandling_ThrowException);
+                    _camera->RetrieveResult(4000, ptr, TimeoutHandling_ThrowException);
                     if (ptr->GrabSucceeded()) {
 
                         qDebug() << "grab success" << QDateTime::currentDateTime();

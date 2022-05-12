@@ -191,7 +191,7 @@ MainWindow::MainWindow(QWidget *parent)
         ui->workModeButton->setEnabled(false);
         ui->showModeButton->setEnabled(true);
         ui->debugModeButton->setEnabled(true);
-
+        _serialPort->ask_mode(1);
 
     });
     connect(ui->showModeButton, &QPushButton::clicked, this, [=] {
@@ -199,6 +199,7 @@ MainWindow::MainWindow(QWidget *parent)
         ui->workModeButton->setEnabled(true);
         ui->showModeButton->setEnabled(false);
         ui->debugModeButton->setEnabled(true);
+        _serialPort->ask_mode(2);
 
     });
     connect(ui->debugModeButton, &QPushButton::clicked, this, [=] {
@@ -206,6 +207,7 @@ MainWindow::MainWindow(QWidget *parent)
         ui->workModeButton->setEnabled(true);
         ui->showModeButton->setEnabled(true);
         ui->debugModeButton->setEnabled(false);
+        _serialPort->ask_mode(3);
 
     });
 
@@ -309,21 +311,21 @@ void MainWindow::on_receive(QByteArray tmpdata) {
                     ui->showModeButton->setEnabled(true);
                     ui->debugModeButton->setEnabled(true);
                     _workMode = WORK_MODE::WORK;
-                    _serialPort->ask_mode(1);
+
                 } else if (tmpdata[4] == 0x02) {
                     //show mode
                     ui->showModeButton->setEnabled(false);
                     ui->workModeButton->setEnabled(true);
                     ui->debugModeButton->setEnabled(true);
                     _workMode = WORK_MODE::SHOW;
-                    _serialPort->ask_mode(2);
+
                 } else if (tmpdata[4] == 0x03) {
                     //debug mode
                     ui->debugModeButton->setEnabled(false);
                     ui->workModeButton->setEnabled(true);
                     ui->showModeButton->setEnabled(true);
                     _workMode = WORK_MODE::DEBUG;
-                    _serialPort->ask_mode(3);
+
                 }
                 _serialPort->ack_mode();
             } else if (tmpdata[3] == 0x10) {
@@ -360,10 +362,13 @@ void MainWindow::on_receive(QByteArray tmpdata) {
                     ParamManage::getInstance().model()->getRootItem()->child(2)->child(3)->setData(false, 1);
                 }
 
+
                 if (tmpdata[4] & 0x02) {
                     GLOBAL_YOLO = 1;
+                    ParamManage::getInstance().model()->getRootItem()->child(3)->child(1)->setData(true, 1);
                 } else {
                     GLOBAL_YOLO = 0;
+                    ParamManage::getInstance().model()->getRootItem()->child(3)->child(1)->setData(false, 1);
                 }
                 _serialPort->ack_save();
             }
