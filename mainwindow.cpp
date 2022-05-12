@@ -12,14 +12,17 @@
 #include <QStorageInfo>
 #include <QProcess>
 
-int GLOBAL_SPEED = 5;
 char canMessage = 23;
+
+int GLOBAL_SPEED = 5;
 int GLOBAL_MODE = 1;
 int GLOBAL_YOLO = 1;
 int GLOBAL_TRASH_AMOUNT = 0;
 int GLOBAL_TRASH_DENSITY = 0;
 int GLOBAL_SAVEPICTURE = 1;
 int GLOBAL_STORAGE = 0;
+int GLOBAL_CAMERACONNECT = 0;
+int GLOBAL_LIGHTCONNECT = 0;
 
 
 /**
@@ -119,17 +122,20 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     //connect button signals
-    connect(ui->saveButton, &QPushButton::clicked, this, [=] {
-        //on save action, update the Json root and parameter struct, write to file and enable the new parameter
-        ParamManage::getInstance().updateJsonRoot();
-        ParamManage::getInstance().writeJsonToFile("settings.json");
-        updateParameter();
-    });
+
 
     connect(ui->applyButton, &QPushButton::clicked, this, [=] {
         //on apply action, update the Json root and parameter struct and enable the new parameter
         ParamManage::getInstance().updateJsonRoot();
+        ParamManage::getInstance().writeJsonToFile("settings.json");
         updateParameter();
+
+        GLOBAL_SAVEPICTURE = ParamManage::getInstance().model()->paramStruct().capture.saveRaw;
+        GLOBAL_YOLO = ParamManage::getInstance().model()->paramStruct().alg.yolo;
+        qDebug() << "yolo is " << GLOBAL_YOLO;
+        char tmpdata = GLOBAL_YOLO<<1 | GLOBAL_SAVEPICTURE;
+        _serialPort->ask_yoloANDsave(tmpdata);
+
     });
 
     //connect the sendImage signal and display the image in the widow
@@ -167,12 +173,14 @@ MainWindow::MainWindow(QWidget *parent)
             ui->playButton->setText("停止");
             ui->nextButton->setEnabled(false);
             ui->previousButton->setEnabled(false);
-            _timerId = startTimer(500);
+            //_timerId = startTimer(500);
+            _serialPort->ask_runANDstop(1);
             CanThread::getInstance().sendResRank(canMessage);
         } else {
             ui->playButton->setText("启动");
             ui->nextButton->setEnabled(true);
             ui->previousButton->setEnabled(true);
+            _serialPort->ask_runANDstop(2);
             killTimer(_timerId);
         }
     });
@@ -183,36 +191,30 @@ MainWindow::MainWindow(QWidget *parent)
         ui->workModeButton->setEnabled(false);
         ui->showModeButton->setEnabled(true);
         ui->debugModeButton->setEnabled(true);
-        ui->sampleMdoeButton->setEnabled(true);
+
+
     });
     connect(ui->showModeButton, &QPushButton::clicked, this, [=] {
         _workMode = WORK_MODE::SHOW;
         ui->workModeButton->setEnabled(true);
         ui->showModeButton->setEnabled(false);
         ui->debugModeButton->setEnabled(true);
-        ui->sampleMdoeButton->setEnabled(true);
+
     });
     connect(ui->debugModeButton, &QPushButton::clicked, this, [=] {
         _workMode = WORK_MODE::DEBUG;
         ui->workModeButton->setEnabled(true);
         ui->showModeButton->setEnabled(true);
         ui->debugModeButton->setEnabled(false);
-        ui->sampleMdoeButton->setEnabled(true);
+
     });
-    connect(ui->sampleMdoeButton, &QPushButton::clicked, this, [=] {
-        _workMode = WORK_MODE::SAMPLE;
-        ui->workModeButton->setEnabled(true);
-        ui->showModeButton->setEnabled(true);
-        ui->debugModeButton->setEnabled(true);
-        ui->sampleMdoeButton->setEnabled(false);
-    });
+
 
     connect(ui->closeButton, &QPushButton::clicked, this, [=] {this->close();});
 
     connect(ui->tdstButton, &QPushButton::clicked, this, [=] {CanThread::getInstance().sendSweeperLevels(0);});
     connect(ui->thstButton, &QPushButton::clicked, this, [=] {CanThread::getInstance().sendSweeperLevels(1);});
-    connect(ui->tfstButton, &QPushButton::clicked, this, [=] {CanThread::getInstance().sendSweeperLevels(2);});
-    connect(ui->tgstButton, &QPushButton::clicked, this, [=] {CanThread::getInstance().sendSweeperLevels(3);});
+
 }
 
 /**
@@ -307,18 +309,21 @@ void MainWindow::on_receive(QByteArray tmpdata) {
                     ui->showModeButton->setEnabled(true);
                     ui->debugModeButton->setEnabled(true);
                     _workMode = WORK_MODE::WORK;
+                    _serialPort->ask_mode(1);
                 } else if (tmpdata[4] == 0x02) {
                     //show mode
                     ui->showModeButton->setEnabled(false);
                     ui->workModeButton->setEnabled(true);
                     ui->debugModeButton->setEnabled(true);
                     _workMode = WORK_MODE::SHOW;
+                    _serialPort->ask_mode(2);
                 } else if (tmpdata[4] == 0x03) {
                     //debug mode
                     ui->debugModeButton->setEnabled(false);
                     ui->workModeButton->setEnabled(true);
                     ui->showModeButton->setEnabled(true);
                     _workMode = WORK_MODE::DEBUG;
+                    _serialPort->ask_mode(3);
                 }
                 _serialPort->ack_mode();
             } else if (tmpdata[3] == 0x10) {
@@ -336,6 +341,7 @@ void MainWindow::on_receive(QByteArray tmpdata) {
 
                 } else if (tmpdata[4] == 0x02) {
                     ui->playButton->setText("启动");
+
                 }
             } else if (tmpdata[3] == 0x80) {
                 GLOBAL_SPEED = tmpdata[4];
@@ -359,13 +365,11 @@ void MainWindow::on_receive(QByteArray tmpdata) {
                 } else {
                     GLOBAL_YOLO = 0;
                 }
-
-
                 _serialPort->ack_save();
             }
 
         } else if (tmpdata[1] == 0x0c) {
-            ParamManage::getInstance().model()->paramStruct().aec.expTime_b = (tmpdata[4]*256 + tmpdata[5])*1000;
+//            ParamManage::getInstance().model()->paramStruct().aec.expTime_b = (tmpdata[4]*256 + tmpdata[5])*1000;
             ParamManage::getInstance().model()->getRootItem()->child(2)->child(4)->setData(tmpdata[9]*256+tmpdata[10], 1);
 
         }
@@ -383,6 +387,12 @@ void MainWindow::on_receive(QByteArray tmpdata) {
             }
         }
     }
+}
+
+void executeReset() {
+    ParamManage::getInstance().model()->getRootItem()->child(2)->child(4)->setData(4000, 1);  //save interval
+    ParamManage::getInstance().model()->getRootItem()->child(2)->child(0)->setData(4000, 1);  //shoot interval
+
 }
 
 // uchar checkData (char * a) {

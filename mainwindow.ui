@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1920</width>
+    <width>1943</width>
     <height>1080</height>
    </rect>
   </property>
@@ -76,13 +76,6 @@
            <widget class="QPushButton" name="applyButton">
             <property name="text">
              <string>应用</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="saveButton">
-            <property name="text">
-             <string>保存</string>
             </property>
            </widget>
           </item>
@@ -250,13 +243,6 @@
        <widget class="QPushButton" name="showModeButton">
         <property name="text">
          <string>演示模式</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="sampleMdoeButton">
-        <property name="text">
-         <string>采集模式</string>
         </property>
        </widget>
       </item>
@@ -801,16 +787,9 @@ border-style:none</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="tfstButton">
+       <widget class="QPushButton" name="resetButton">
         <property name="text">
-         <string>Sweeper Medium</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="tgstButton">
-        <property name="text">
-         <string>Sweeper High</string>
+         <string>恢复出厂设置</string>
         </property>
        </widget>
       </item>

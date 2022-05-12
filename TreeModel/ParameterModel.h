@@ -19,12 +19,11 @@ public:
 
     struct Parameter {
             struct Aec {
-                double expTime_a;
-                double expTime_b;
-                int maxGain;
-                int minGain;
+                double expTime;
+                int mannualExpTime;
+                int mannualGain;
                 int speed;
-                double minExpTime;
+
             } aec;
             struct Camera {
                 int gain;
@@ -40,14 +39,13 @@ public:
                 std::string savePath;
                 bool saveRaw;
                 int saveRawInterval;
-                int saveResInterval;
-                bool saveResult;
+
             } capture;
             struct Alg {
                 bool hdr;
                 bool yolo;
                 bool autoExpo;
-            };
+            } alg;
         } _parameter;
 
     struct Parameter& paramStruct() {return _parameter;}

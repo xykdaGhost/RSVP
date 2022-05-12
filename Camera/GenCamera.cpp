@@ -25,6 +25,7 @@ static int speed = 5;
 extern int GLOBAL_YOLO;
 extern int GLOBAL_SPEED;
 extern int GLOBAL_SAVEPICTURE;
+extern int GLOBAL_CAMERACONNECT;
 
 inline cv::Point getTargetPoint(cv::Point pt_origin, cv::Mat warpMatrix) {
     cv::Mat_<double> mat_pt(3, 1);
@@ -124,11 +125,13 @@ void GenCamera::openCamera() {
         cv::invert(M, M_1);
 
         emit sendStatus("已连接");
+//        GLOBAL_CAMERACONNECT = 1;
     }  catch (const GenericException& e) {
         // Error handling.
         std::cerr << "An exception occurred." << std::endl
             << e.GetDescription() << std::endl;
         emit sendStatus("未连接");
+//        GLOABL_CAMERACONNECT = 0;
     }
 }
 

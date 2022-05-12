@@ -308,8 +308,8 @@ vector<float> AutoExposure::control_ExpTime(float ExpTime, float Speed,float Gai
     //the MaxExpTime's relationship with Speed
     //the fastest is 15km/h and the MaxExpTime is 0.5ms
     //the slowest is 3km/h and the MaxExpTime is 2ms
-    mMinExpTimeXSpeed = paramManage.model()->paramStruct().aec.minExpTime;
-    mMaxExpTimeXSpeed = paramManage.model()->paramStruct().aec.expTime_b + Speed * paramManage.model()->paramStruct().aec.expTime_a;
+//    mMinExpTimeXSpeed = paramManage.model()->paramStruct().aec.minExpTime;
+ //   mMaxExpTimeXSpeed = paramManage.model()->paramStruct().aec.expTime_b + Speed * paramManage.model()->paramStruct().aec.expTime_a;
 //    mMaxExpTimeXSpeed /= 100;
     cout<<"min exposure time"<<mMinExpTimeXSpeed<<" max exposure time"<<mMaxExpTimeXSpeed<<endl;
     //the mMinExpTime and mMaxExpTime are related to Speed
@@ -347,16 +347,16 @@ vector<float> AutoExposure::control_ExpTime(float ExpTime, float Speed,float Gai
     else {
         nextGain = 0;
     }
-    if (nextGain >= paramManage.model()->paramStruct().aec.maxGain)
-        nextGain = paramManage.model()->paramStruct().aec.maxGain;
-    if (nextGain < paramManage.model()->paramStruct().aec.minGain)
-        nextGain = paramManage.model()->paramStruct().aec.minGain;
+//    if (nextGain >= paramManage.model()->paramStruct().aec.maxGain)
+//        nextGain = paramManage.model()->paramStruct().aec.maxGain;
+//    if (nextGain < paramManage.model()->paramStruct().aec.minGain)
+//        nextGain = paramManage.model()->paramStruct().aec.minGain;
 
     //how to control warning_signal
-    if (nextGain == paramManage.model()->paramStruct().aec.maxGain && led_control == 1 && ExpTime > mMaxExpTimeXSpeed)
-        warning_signal = 1;
-    else
-        warning_signal = 0;
+//    if (nextGain == paramManage.model()->paramStruct().aec.maxGain && led_control == 1 && ExpTime > mMaxExpTimeXSpeed)
+//        warning_signal = 1;
+//    else
+//        warning_signal = 0;
 
     nextExpTime_Gain_Control.push_back(nextExpTime);
     nextExpTime_Gain_Control.push_back(nextGain);

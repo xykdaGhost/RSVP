@@ -19,18 +19,15 @@ ParameterModel::ParameterModel(const Json::Value root, QObject *parent) :
     rootItem->appendChild(capture);
     rootItem->appendChild(alg);
 
-    TreeItem* expTime_a = new TreeItem({"-曝光系数Ａ:", root["aec"]["expTime_a"].asInt()}, aec);
-    TreeItem* expTime_b = new TreeItem({"-曝光系数B:", root["aec"]["expTime_b"].asInt()}, aec);
-    TreeItem* maxGain = new TreeItem({"-最大增益:", root["aec"]["maxGain"].asInt()}, aec);
-    TreeItem* minGain = new TreeItem({"-最小增益:", root["aec"]["minGain"].asInt()}, aec);
+    TreeItem* expTime = new TreeItem({"-曝光系数:", root["aec"]["expTime"].asInt()}, aec);
+    TreeItem* mannualExpTime = new TreeItem({"-手动曝光时间:", root["aec"]["mannualExpTime"].asInt()}, aec);
+    TreeItem* mannualGain = new TreeItem({"-手动增益:", root["aec"]["mannualGain"].asInt()}, aec);
     TreeItem* speed = new TreeItem({"-速度(km/h):", root["aec"]["speed"].asInt()}, aec);
-    TreeItem* minExpTime = new TreeItem({"-最小曝光时间(us):", root["aec"]["minExpTime"].asInt()}, aec);
-    aec->appendChild(expTime_a);
-    aec->appendChild(expTime_b);
-    aec->appendChild(maxGain);
-    aec->appendChild(minGain);
+
+    aec->appendChild(expTime);
+    aec->appendChild(mannualExpTime);
+    aec->appendChild(mannualGain);
     aec->appendChild(speed);
-    aec->appendChild(minExpTime);
 
     TreeItem* gain = new TreeItem({"-增益:", root["camera"]["gain"].asInt()}, camera);
     TreeItem* width = new TreeItem({"-宽(pixs):", root["camera"]["width"].asInt()}, camera);
@@ -50,15 +47,13 @@ ParameterModel::ParameterModel(const Json::Value root, QObject *parent) :
     TreeItem* savePath = new TreeItem({"-存储地址:", QString::fromStdString(root["capture"]["savePath"].asString())}, capture);
     TreeItem* saveRaw = new TreeItem({"-存储原图:", root["capture"]["saveRaw"].asBool()}, capture);
     TreeItem* saveRawInterval = new TreeItem({"-原图间隔(ms):", root["capture"]["saveRawInterval"].asInt()}, capture);
-    TreeItem* saveResInterval = new TreeItem({"-结果间隔(ms):", root["capture"]["saveResInterval"].asInt()}, capture);
-    TreeItem* saveResult = new TreeItem({"-存储结果P:", root["capture"]["saveResult"].asBool()}, capture);
+
     capture->appendChild(interval);
     capture->appendChild(trigger);
     capture->appendChild(savePath);
     capture->appendChild(saveRaw);
     capture->appendChild(saveRawInterval);
-    capture->appendChild(saveResInterval);
-    capture->appendChild(saveResult);
+
 
     TreeItem* hdr = new TreeItem({"-HDR:", root["alg"]["hdr"].asBool()}, alg);
     TreeItem* yolo = new TreeItem({"-YOLO:", root["alg"]["yolo"].asBool()}, alg);
@@ -81,12 +76,10 @@ ParameterModel::~ParameterModel() {
  * @param root : json root
  */
 void ParameterModel::setupModelData(const Json::Value root) {
-    rootItem->child(0)->child(0)->setData(root["aec"]["expTime_a"].asInt(), 1);
-    rootItem->child(0)->child(1)->setData(root["aec"]["expTime_b"].asInt(), 1);
-    rootItem->child(0)->child(2)->setData(root["aec"]["maxGain"].asInt(), 1);
-    rootItem->child(0)->child(3)->setData(root["aec"]["minGain"].asInt(), 1);
-    rootItem->child(0)->child(4)->setData(root["aec"]["speed"].asInt(), 1);
-    rootItem->child(0)->child(5)->setData(root["aec"]["minExpTime"].asInt(), 1);
+    rootItem->child(0)->child(0)->setData(root["aec"]["expTime"].asInt(), 1);
+    rootItem->child(0)->child(1)->setData(root["aec"]["mannualExpTime"].asInt(), 1);
+    rootItem->child(0)->child(2)->setData(root["aec"]["mannualGain"].asInt(), 1);
+    rootItem->child(0)->child(3)->setData(root["aec"]["speed"].asInt(), 1);
 
     rootItem->child(1)->child(0)->setData(root["camera"]["gain"].asInt(), 1);
     rootItem->child(1)->child(1)->setData(root["camera"]["width"].asInt(), 1);
@@ -100,8 +93,7 @@ void ParameterModel::setupModelData(const Json::Value root) {
     rootItem->child(2)->child(2)->setData(QString::fromStdString(root["capture"]["savePath"].asString()), 1);
     rootItem->child(2)->child(3)->setData(root["capture"]["saveRaw"].asBool(), 1);
     rootItem->child(2)->child(4)->setData(root["capture"]["saveRawInterval"].asInt(), 1);
-    rootItem->child(2)->child(5)->setData(root["capture"]["saveResInterval"].asInt(), 1);
-    rootItem->child(2)->child(6)->setData(root["capture"]["saveResult"].asBool(), 1);
+
 
     rootItem->child(3)->child(0)->setData(root["alg"]["hdr"].asBool(), 1);
     rootItem->child(3)->child(1)->setData(root["alg"]["yolo"].asBool(), 1);
@@ -113,12 +105,11 @@ void ParameterModel::setupModelData(const Json::Value root) {
  * @param root : json root
  */
 void ParameterModel::setupJsonData(Json::Value& root) {
-    root["aec"]["expTime_a"] = rootItem->child(0)->child(0)->data(1).toInt();
-    root["aec"]["expTime_b"] = rootItem->child(0)->child(1)->data(1).toInt();
-    root["aec"]["maxGain"] = rootItem->child(0)->child(2)->data(1).toInt();
-    root["aec"]["minGain"] = rootItem->child(0)->child(3)->data(1).toInt();
-    root["aec"]["speed"] = rootItem->child(0)->child(0)->data(4).toInt();
-    root["aec"]["minExpTime"] = rootItem->child(0)->child(5)->data(1).toInt();
+    root["aec"]["expTime"] = rootItem->child(0)->child(0)->data(1).toInt();
+    root["aec"]["mannualExpTime"] = rootItem->child(0)->child(1)->data(1).toInt();
+    root["aec"]["mannualGain"] = rootItem->child(0)->child(2)->data(1).toInt();
+    root["aec"]["speed"] = rootItem->child(0)->child(3)->data(1).toInt();
+
 
     root["camera"]["gain"] = rootItem->child(1)->child(0)->data(1).toInt();
     root["camera"]["width"] = rootItem->child(1)->child(1)->data(1).toInt();
@@ -132,8 +123,7 @@ void ParameterModel::setupJsonData(Json::Value& root) {
     root["capture"]["savePath"] = rootItem->child(2)->child(2)->data(1).toString().toStdString();
     root["capture"]["saveRaw"] = rootItem->child(2)->child(3)->data(1).toBool();
     root["capture"]["saveRawInterval"] = rootItem->child(2)->child(4)->data(1).toInt();
-    root["capture"]["saveResInterval"] = rootItem->child(2)->child(5)->data(1).toInt();
-    root["capture"]["saveResult"] = rootItem->child(2)->child(6)->data(1).toBool();
+
 
     root["alg"]["hdr"] = rootItem->child(3)->child(0)->data(1).toBool();
     root["alg"]["yolo"] = rootItem->child(3)->child(1)->data(1).toBool();
@@ -146,12 +136,11 @@ void ParameterModel::setupJsonData(Json::Value& root) {
  * @brief Setup json struct for check
  */
 void ParameterModel::setupJsonStruct() {
-    _parameter.aec.expTime_a = rootItem->child(0)->child(0)->data(1).toInt();
-    _parameter.aec.expTime_b = rootItem->child(0)->child(1)->data(1).toInt();
-    _parameter.aec.maxGain = rootItem->child(0)->child(2)->data(1).toInt();
-    _parameter.aec.minGain = rootItem->child(0)->child(3)->data(1).toInt();
-    _parameter.aec.speed = rootItem->child(0)->child(4)->data(1).toInt();
-    _parameter.aec.minExpTime = rootItem->child(0)->child(5)->data(1).toInt();
+    _parameter.aec.expTime = rootItem->child(0)->child(0)->data(1).toInt();
+    _parameter.aec.mannualExpTime = rootItem->child(0)->child(1)->data(1).toInt();
+    _parameter.aec.mannualGain = rootItem->child(0)->child(2)->data(1).toInt();
+    _parameter.aec.speed = rootItem->child(0)->child(3)->data(1).toInt();
+
 
     _parameter.camera.gain = rootItem->child(1)->child(0)->data(1).toInt();
     _parameter.camera.width = rootItem->child(1)->child(1)->data(1).toInt();
@@ -165,8 +154,9 @@ void ParameterModel::setupJsonStruct() {
     _parameter.capture.savePath = rootItem->child(2)->child(2)->data(1).toString().toStdString();
     _parameter.capture.saveRaw = rootItem->child(2)->child(3)->data(1).toBool();
     _parameter.capture.saveRawInterval = rootItem->child(2)->child(4)->data(1).toInt();
-    _parameter.capture.saveResInterval = rootItem->child(2)->child(5)->data(1).toInt();
-    _parameter.capture.saveResult = rootItem->child(2)->child(6)->data(1).toBool();
+
+    _parameter.alg.yolo = rootItem->child(3)->child(1)->data(1).toBool();
+
 }
 
 TreeItem* ParameterModel::getRootItem() {

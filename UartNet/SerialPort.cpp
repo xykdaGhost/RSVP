@@ -250,6 +250,79 @@ void SerialPort::ack_status() {
 
 }
 
+    void SerialPort::ask_yoloANDsave(char stauts) {
+    qDebug() << "set yolo and save";
+    QByteArray data;
+    data.resize(6);
+    data[0] = 0xea;
+    data[1] = 0x03;
+    data[2] = 0x00;
+    data[3] = 0x70;
+
+    data[4] = stauts;
+
+    data[5] = (data[2] + data[3] + data[4])%256;
+    data[6] = 0xeb;
+    port->write(data, 7);
+    qDebug() << data;
+ }
+
+void SerialPort::ask_interval(char saveInterval, char shootInterval) {
+    qDebug() << "set yolo";
+    QByteArray data;
+    data.resize(6);
+    data[0] = 0xea;
+    data[1] = 0x02;
+    data[2] = 0x00;
+    data[3] = 0x41;
+    data[4] = 0x41;
+    data[5] = 0xeb;
+    port->write(data, 6);
+}
+
+void SerialPort::ask_reset() {
+    qDebug() << "set yolo";
+    QByteArray data;
+    data.resize(6);
+    data[0] = 0xea;
+    data[1] = 0x02;
+    data[2] = 0x00;
+    data[3] = 0x41;
+    data[4] = 0x41;
+    data[5] = 0xeb;
+    port->write(data, 6);
+}
+
+
+void SerialPort::ask_mode(char m) {
+    qDebug() << "set mode";
+    QByteArray data;
+    data.resize(6);
+    data[0] = 0xea;
+    data[1] = 0x03;
+    data[2] = 0x00;
+    data[3] = 0x20;
+    data[4] = m;
+    data[5] = (data[2]+data[3]+data[4])%256;
+    data[6] = 0xeb;
+    port->write(data, 7);
+}
+
+void SerialPort::ask_runANDstop(char m) {
+    qDebug() << "set run and srop";
+    QByteArray data;
+    data.resize(6);
+    data[0] = 0xea;
+    data[1] = 0x03;
+    data[2] = 0x00;
+    data[3] = 0x10;
+    data[4] = m;
+    data[5] = (data[2]+data[3]+data[4])%256;
+    data[6] = 0xeb;
+    port->write(data, 7);
+}
+
+
 uchar calc(uchar * data) {
 
 }

@@ -38,6 +38,11 @@ public slots:
     void ack_level();
     void ack_status();
     void ack_save();
+    void ask_interval(char saveInterval, char shootInterval);
+    void ask_yoloANDsave(char stauts);
+    void ask_reset();
+    void ask_mode(char mode);
+    void ask_runANDstop(char m);
 
 signals:
     void receive_data(QByteArray tmp);
