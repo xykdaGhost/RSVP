@@ -286,6 +286,8 @@ void SerialPort::ask_interval(short saveInterval, short shootInterval) {
     data[9] = 0xeb;
 
     port->write(data, 10);
+
+    qDebug() << data;
 }
 
 void SerialPort::ask_reset() {
