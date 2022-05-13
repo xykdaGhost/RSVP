@@ -191,6 +191,7 @@ MainWindow::MainWindow(QWidget *parent)
         ui->workModeButton->setEnabled(false);
         ui->showModeButton->setEnabled(true);
         ui->debugModeButton->setEnabled(true);
+        ui->workModeButton->setGraphicsEffect();
         _serialPort->ask_mode(1);
 
     });
@@ -211,6 +212,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     });
 
+    connect(ui->resetButton, &QPushButton::clicked, this, [=] {
+      // executeReset();
+    });
 
     connect(ui->closeButton, &QPushButton::clicked, this, [=] {this->close();});
 
@@ -397,6 +401,8 @@ void MainWindow::on_receive(QByteArray tmpdata) {
 void executeReset() {
     ParamManage::getInstance().model()->getRootItem()->child(2)->child(4)->setData(4000, 1);  //save interval
     ParamManage::getInstance().model()->getRootItem()->child(2)->child(0)->setData(4000, 1);  //shoot interval
+    ParamManage::getInstance().model()->getRootItem()->child(3)->child(1)->setData(true, 1);  //yolo
+    ParamManage::getInstance().model()->getRootItem()->child(2)->child(3)->setData(true, 1);  //save
 
 }
 

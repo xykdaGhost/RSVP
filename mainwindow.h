@@ -35,6 +35,7 @@ public:
     };
 
     virtual void timerEvent(QTimerEvent *event) override;
+    void executeReset();
 
     int _workMode;
 
