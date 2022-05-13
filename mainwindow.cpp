@@ -132,9 +132,13 @@ MainWindow::MainWindow(QWidget *parent)
 
         GLOBAL_SAVEPICTURE = ParamManage::getInstance().model()->paramStruct().capture.saveRaw;
         GLOBAL_YOLO = ParamManage::getInstance().model()->paramStruct().alg.yolo;
+        
+
         qDebug() << "yolo is " << GLOBAL_YOLO;
         char tmpdata = GLOBAL_YOLO<<1 | GLOBAL_SAVEPICTURE;
         _serialPort->ask_yoloANDsave(tmpdata);
+
+        _serialPort->ask_interval((short)ParamManage::getInstance().model()->paramStruct().capture.saveRawInterval, (short)ParamManage::getInstance().model()->paramStruct().capture.interval);
 
     });
 
@@ -381,7 +385,11 @@ void MainWindow::on_receive(QByteArray tmpdata) {
 //            ParamManage::getInstance().model()->paramStruct().aec.expTime_b = (tmpdata[4]*256 + tmpdata[5])*1000;
             ParamManage::getInstance().model()->getRootItem()->child(2)->child(4)->setData(tmpdata[9]*256+tmpdata[10], 1);
 
+        } else if (tmpdata[1] == 0x06) {
+            ParamManage::getInstance().model()->getRootItem()->child(2)->child(0)->setData(tmpdata[4]*256+tmpdata[5], 1);
+            ParamManage::getInstance().model()->getRootItem()->child(2)->child(4)->setData(tmpdata[6]*256+tmpdata[7], 1);
         }
+        
 
             
 

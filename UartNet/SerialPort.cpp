@@ -267,17 +267,25 @@ void SerialPort::ack_status() {
     qDebug() << data;
  }
 
-void SerialPort::ask_interval(char saveInterval, char shootInterval) {
-    qDebug() << "set yolo";
+void SerialPort::ask_interval(short saveInterval, short shootInterval) {
+    qDebug() << "set interval";
     QByteArray data;
     data.resize(6);
     data[0] = 0xea;
-    data[1] = 0x02;
+    data[1] = 0x06;
     data[2] = 0x00;
-    data[3] = 0x41;
-    data[4] = 0x41;
-    data[5] = 0xeb;
-    port->write(data, 6);
+    data[3] = 0x51;
+
+    data[4] = shootInterval/256;
+    data[5] = shootInterval%256;
+
+    data[6] = saveInterval/256;
+    data[7] = saveInterval%256;
+
+    data[8] = (data[2] + data[3] + data[4] + data[5] + data[6] + data[7])%256;
+    data[9] = 0xeb;
+
+    port->write(data, 10);
 }
 
 void SerialPort::ask_reset() {
@@ -321,6 +329,8 @@ void SerialPort::ask_runANDstop(char m) {
     data[6] = 0xeb;
     port->write(data, 7);
 }
+
+
 
 
 uchar calc(uchar * data) {
