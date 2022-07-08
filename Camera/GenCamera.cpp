@@ -14,6 +14,10 @@ using namespace Basler_UniversalCameraParams;
 using namespace GenApi;
 
 #define SoftwareTrigger
+// in fact,its a hardware trigger define,if you wants to use the real softwaretrigger
+//  _camera->TriggerSource.SetValue(TriggerSource_Line1); needs to be TriggerSource_Software
+// and _camera->ExecuteSoftwareTrigger(); needs to be added to simulate the trigger action when you want to get the image.
+
 //#define FixedWhiteBalance
 static QString current_time = QDateTime::currentDateTime().toString("yyyyMMdd_hh_mm");
 static bool new_folder_flag = true;
@@ -170,7 +174,7 @@ void GenCamera::acquireImage(ResultModel* model) {
                 // Execute the software trigger. Wait up to 1000 ms for the camera to be ready for trigger.
                 if (_camera->WaitForFrameTriggerReady(500, TimeoutHandling_ThrowException))
                 {
-                    _camera->ExecuteSoftwareTrigger();
+                    //_camera->ExecuteSoftwareTrigger();
                     qDebug() << "start grab" <<QDateTime::currentDateTime();
                     _camera->RetrieveResult(4000, ptr, TimeoutHandling_ThrowException);
                     if (ptr->GrabSucceeded()) {

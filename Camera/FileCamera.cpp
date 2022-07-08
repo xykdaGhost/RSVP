@@ -3,6 +3,7 @@
 #include <iostream>
 #include <algorithm>
 #include <opencv2/opencv.hpp>
+#include <opencv2/highgui.hpp>
 #include "../JsonWork/ParamManage.h"
 #include <dirent.h>
 #include <ctime>
@@ -10,6 +11,7 @@
 #include <QDebug>
 #include <Analysis/checkresult.h>
 #include <vector>
+
 
 /**
  * @brief Constructor of FileCamera
@@ -56,7 +58,7 @@ void FileCamera::acquireImage(bool dir, QTableWidget* widget, ResultModel* model
 
     //read the image
     cv::Mat image;
-    image = cv::imread(FileName.toStdString(), cv::IMREAD_UNCHANGED);
+    image = cv::imread(FileName.toStdString(), cv::IMREAD_COLOR);
 
     QImage sendimage(QSize(2432, 896), QImage::Format::Format_RGB888);
 
@@ -67,9 +69,10 @@ void FileCamera::acquireImage(bool dir, QTableWidget* widget, ResultModel* model
         quint16* img16 = (quint16*)image.data;
         for(int i = 0; i < 2432*896*3; i++) {
             sendimage.bits()[i] = img16[i] >> 4;
+//            sendimage.bits()[i] = img16[i];
         }
 
-        cvtColor(image, image, cv::COLOR_BGR2RGB);
+//        cvtColor(image, image, cv::COLOR_BGR2RGB);
         std::vector<std::pair<int, double>> detectRes;
 
         std::cout<<"Ready to enter Yolo"<<std::endl;
@@ -84,10 +87,12 @@ void FileCamera::acquireImage(bool dir, QTableWidget* widget, ResultModel* model
         checkResult(mlabel, ylabel, &sendimage, widget);
 
         model->setData(detectRes);
+
+        qDebug() << "run widget";
     } else {
         std::vector<std::pair<int, double>> detectRes;
-        _yoloAlg->handleImage(image, detectRes, _dirList[_fileNum].left(_dirList[_fileNum].size() - 4).toStdString(), paramManage.model()->paramStruct().capture.savePath +
-                              "/res/ylabel/");
+//        _yoloAlg->handleImage(image, detectRes, _dirList[_fileNum].left(_dirList[_fileNum].size() - 4).toStdString(), paramManage.model()->paramStruct().capture.savePath +
+ //                             "/res/ylabel/");
 
         //convert the image from bayer to rgb
         cvtColor(image, image, cv::COLOR_BGR2RGB);
@@ -99,6 +104,8 @@ void FileCamera::acquireImage(bool dir, QTableWidget* widget, ResultModel* model
         }
 
         model->setData(detectRes);
+
+        qDebug() << "run else widget";
     }
     emit sendImage(sendimage);
 }
