@@ -11,7 +11,7 @@
 #include <QDebug>
 #include <Analysis/checkresult.h>
 #include <vector>
-
+extern int GLOBAL_YOLO;
 
 /**
  * @brief Constructor of FileCamera
@@ -58,18 +58,23 @@ void FileCamera::acquireImage(bool dir, QTableWidget* widget, ResultModel* model
 
     //read the image
     cv::Mat image;
-    image = cv::imread(FileName.toStdString(), cv::IMREAD_COLOR);
+    image = cv::imread(FileName.toStdString(), cv::IMREAD_UNCHANGED);
+    std::cout << "read image";
 
     QImage sendimage(QSize(2432, 896), QImage::Format::Format_RGB888);
 
     if(widget) {
-        //convert the image from bayer to rgb
-        cvtColor(image, image, cv::COLOR_BGR2RGB);
+//        //convert the image from bayer to rgb
+//        cvtColor(image, image, cv::COLOR_BGR2RGB);
         //convert the image from cv::Mat in 16bits to QImage in 8bits for display
+
+        int flagtmp = 10;
+
         quint16* img16 = (quint16*)image.data;
+        std::cout << "handle image";
         for(int i = 0; i < 2432*896*3; i++) {
             sendimage.bits()[i] = img16[i] >> 4;
-//            sendimage.bits()[i] = img16[i];
+
         }
 
 //        cvtColor(image, image, cv::COLOR_BGR2RGB);
@@ -91,21 +96,30 @@ void FileCamera::acquireImage(bool dir, QTableWidget* widget, ResultModel* model
         qDebug() << "run widget";
     } else {
         std::vector<std::pair<int, double>> detectRes;
-//        _yoloAlg->handleImage(image, detectRes, _dirList[_fileNum].left(_dirList[_fileNum].size() - 4).toStdString(), paramManage.model()->paramStruct().capture.savePath +
- //                             "/res/ylabel/");
 
-        //convert the image from bayer to rgb
-        cvtColor(image, image, cv::COLOR_BGR2RGB);
+        if (GLOBAL_YOLO) {
+           _yoloAlg->handleImage(image, detectRes, _dirList[_fileNum].left(_dirList[_fileNum].size() - 4).toStdString(), paramManage.model()->paramStruct().capture.savePath +
+                              "/res/ylabel/");
+        }
+//        //convert the image from bayer to rgb
+//        cvtColor(image, image, cv::COLOR_BGR2RGB);
 
         //convert the image from cv::Mat in 16bits to QImage in 8bits for display
         quint16* img16 = (quint16*)image.data;
+
+        int flog = 2;
+
         for(int i = 0; i < 2432*896*3; i++) {
-            sendimage.bits()[i] = img16[i] >> 4;
+            sendimage.bits()[i] = img16[i] >> 8;
+//            if (flog > 0) {
+//                qDebug() << "img16[i] : " << img16[i] << "\n";
+//                qDebug() << "sendimage : " << sendimage.bits()[i] << "\n";
+//                flog--;
+//            }
         }
 
         model->setData(detectRes);
 
-        qDebug() << "run else widget";
     }
     emit sendImage(sendimage);
 }
