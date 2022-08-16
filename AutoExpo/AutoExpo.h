@@ -10,16 +10,16 @@
 using namespace std;
 using namespace cv;
 
-#define Bd1 20
-#define Bd2 30
-#define Bu1 225
-#define Bu2 235
-#define kkk 28
-#define k_f 0.7
+#define Bd1 5
+#define Bd2 20
+#define Bu1 235
+#define Bu2 250
+#define kkk 20
+#define k_f 0.99
 #define k_s (1-k_f)
 #define k_gain 2 //ÔöÒæµ÷œÚ³¬²ÎÊý
 #define maxgain 100
-#define k_p 0.85
+#define k_p 0.25
 
 class AutoExposure : public Algorithm {
 public:

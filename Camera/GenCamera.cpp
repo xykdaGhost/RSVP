@@ -14,6 +14,10 @@ using namespace Basler_UniversalCameraParams;
 using namespace GenApi;
 
 #define SoftwareTrigger
+// in fact,its a hardware trigger define,if you wants to use the real softwaretrigger
+//  _camera->TriggerSource.SetValue(TriggerSource_Line1); needs to be TriggerSource_Software
+// and _camera->ExecuteSoftwareTrigger(); needs to be added to simulate the trigger action when you want to get the image.
+
 //#define FixedWhiteBalance
 static QString current_time = QDateTime::currentDateTime().toString("yyyyMMdd_hh_mm");
 static bool new_folder_flag = true;
@@ -170,7 +174,7 @@ void GenCamera::acquireImage(ResultModel* model) {
                 // Execute the software trigger. Wait up to 1000 ms for the camera to be ready for trigger.
                 if (_camera->WaitForFrameTriggerReady(500, TimeoutHandling_ThrowException))
                 {
-                    _camera->ExecuteSoftwareTrigger();
+                    //_camera->ExecuteSoftwareTrigger();
                     qDebug() << "start grab" <<QDateTime::currentDateTime();
                     _camera->RetrieveResult(4000, ptr, TimeoutHandling_ThrowException);
                     if (ptr->GrabSucceeded()) {
@@ -205,23 +209,16 @@ void GenCamera::acquireImage(ResultModel* model) {
         if(image.empty())
             return;
 
+
+
+
         //save photo
         cv::Mat target_raw = image(cv::Rect(0, 329, 2432, 896));
 
-
         //convert the image from bayer to rgb
         cvtColor(image, image, cv::COLOR_BayerRG2RGB);
-//        time_t now = time(0);
-//        //get the time point and format it as the file name
-//        tm *ltm = localtime(&now);
-//        std::string timeStamp = std::to_string(ltm->tm_mon) + "_" +
-//                std::to_string(ltm->tm_mday) + "_" +
-//                getRandomString(5).toStdString();
 
-
-        //set photo name
         speed = paramManage.model()->paramStruct().aec.speed;
-
 
 
 //2021.10.20 lmd
@@ -229,7 +226,7 @@ void GenCamera::acquireImage(ResultModel* model) {
         /*
          20211128 area cut
          */
-        qDebug() << "now speed is : " << GLOBAL_SPEED;
+
         float x = (0.058+ lastt12)*arg(GLOBAL_SPEED)*0.1; //+arg(paramManage.model()->paramStruct().capture.interval) //0.058camera delay
         cv::Point r2 = getTargetPoint(cv::Point(0, x+520), M_1);//×óÉÏ
         cv::Point ur = getTargetPoint(cv::Point(362, x+520), M_1);
@@ -245,24 +242,25 @@ void GenCamera::acquireImage(ResultModel* model) {
 
         cv::Mat expoImage = image(area1);
 
-        //
-
+        //photo name
         std::string photoName = current_time.toStdString() + "_"
                 + QString("%1").arg(photo_name_id, 5, 'g', -1, '0').toStdString()
                 + "_" + "e" + std::to_string(photo_name_expo_time)
                 + "_" + "g" + std::to_string(photo_name_gain)
                 + "_" + "s" + std::to_string(GLOBAL_SPEED)
                 + "_" + "t4000"
-                + "_" +QString("x%1").arg(lp,4,10).toStdString()
-                + "_" +QString("y%1").arg(ly,4,10).toStdString()
-                + "_" +QString("w%1").arg(2432-2*lp, 4,10).toStdString()
-                + "_" +QString("h%1").arg(minmax(r1.y-r2.y,2,dly-ly),4,10).toStdString();
+                + "_" + "x" + std::to_string(lp)
+                + "_" + "y" + std::to_string(ly)
+                + "_" + "w" + std::to_string(2432-2*lp)
+                + "_" + "h" + std::to_string(minmax(r1.y-r2.y,2,dly-ly));
+
+//                + "_" +QString("x%1").arg(lp,4,10).toStdString()
+//                + "_" +QString("y%1").arg(ly,4,10).toStdString()
+//                + "_" +QString("w%1").arg(2432-2*lp, 4,10).toStdString()
+//                + "_" +QString("h%1").arg(minmax(r1.y-r2.y,2,dly-ly),4,10).toStdString();
 
         //<date>_<hour>_<minute>_<XXXXX(order)>_<eXXXX(expo time)>_<gXXX(gain)>_<sXX(speed)>_<tXXXX(interval)>
         //20220226_17_01_00394_e 3600_g   86_s  0_t1000_x 302_y 329_w1828_h 895.png
-
-
-
 
         cv::Mat target = image(cv::Rect(0, 329, 2432, 896));
 
@@ -275,7 +273,6 @@ void GenCamera::acquireImage(ResultModel* model) {
             folder->mkdir(dir + "/res/");
             folder->mkdir(dir + "/res/ylabel/");
             folder->mkdir(dir + "/raw/");
-
             new_folder_flag = false;
         }
 
@@ -283,14 +280,18 @@ void GenCamera::acquireImage(ResultModel* model) {
 //            target.convertTo(target, CV_8UC1);
             std::string writeName = paramManage.model()->paramStruct().capture.savePath + "/" + current_time.toStdString() + "/raw/";
             writeName = writeName + photoName + ".png";
-            target_raw = image * 16; //target*16
+
+            target_raw = target.clone();
+            quint16* imgflog = (quint16*)target_raw.data;
             target_raw.convertTo(target_raw, CV_16UC3);
+            target_raw = target_raw * 16;
+
             photo_name_id++;
             cv::Mat writeImage = target_raw.clone(); // expo
-
             WriteImageThread* thread = new WriteImageThread(writeImage, writeName);
             thread->start();
         }
+
 
         std::vector<std::pair<int, double>> detectRes;
 
@@ -298,15 +299,13 @@ void GenCamera::acquireImage(ResultModel* model) {
         _yoloAlg->handleImage(target, detectRes, photoName, paramManage.model()->paramStruct().capture.savePath + "/" +current_time.toStdString() +
                               "/res/ylabel/");}
 
-        //convert the image from bayer to rgb
-        cvtColor(image, image, cv::COLOR_BGR2RGB);
         //convert the image from cv::Mat in 16bits to QImage in 8bits for display
         QImage sendimage(QSize(2432, 896), QImage::Format::Format_RGB888);
         quint16* img16 = (quint16*)target.data;
+
         for(int i = 0; i < 2432*896*3; i++) {
             sendimage.bits()[i] = img16[i] >> 4;
         }
-
 
         if (GLOBAL_YOLO) {
             model->setData(detectRes);
@@ -322,7 +321,6 @@ void GenCamera::acquireImage(ResultModel* model) {
         paramManage.updateJsonRoot();
         expoImage = expoImage / 16;
         expoImage.convertTo(expoImage, CV_8UC3);
-        //vector<float> aecRes = autoExpo->getNextExpTime(expoImage, paramManage.model()->paramStruct().aec.speed);
         //
         cv::Mat gray;
         cv::cvtColor(expoImage, gray, COLOR_RGB2GRAY);

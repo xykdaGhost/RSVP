@@ -179,8 +179,10 @@ MainWindow::MainWindow(QWidget *parent)
             ui->playButton->setText("停止");
             ui->nextButton->setEnabled(false);
             ui->previousButton->setEnabled(false);
-            //_timerId = startTimer(500);
-            _serialPort->ask_runANDstop(1);
+           // _timerId = startTimer(500);
+            //_serialPort->ask_runANDstop(1);
+            ResultModel* result = static_cast<ResultModel*>(ui->resultView->model());
+            FileCamera::getInstance().acquireImage(true, _analysis? ui->analysisWidget : nullptr, result);
             CanThread::getInstance().sendResRank(canMessage);
         } else {
             ui->playButton->setText("启动");
@@ -250,13 +252,14 @@ void MainWindow::timerEvent(QTimerEvent *event)
     if(event->timerId() == _timerId)
     {
 
-        qDebug() << "mannul";
-        if(_workMode == WORK_MODE::SHOW){
-            qDebug() << "mannul filecamera";
+//        qDebug() << "mannul";
+//        if(_workMode == WORK_MODE::SHOW){
+//            qDebug() << "mannul filecamera";
             FileCamera::getInstance().acquireImage(true, _analysis? ui->analysisWidget : nullptr, result);
-        }
-        else
-            GenCamera::getInstance().acquireImage(result);
+//        }
+//        else
+//            GenCamera::getInstance().acquireImage(result);
+
     }
 }
 
