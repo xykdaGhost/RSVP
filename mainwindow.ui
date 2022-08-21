@@ -515,7 +515,7 @@
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>Ver 2.0.0B.1E</string>
+          <string>Ver 3.0.0</string>
          </property>
         </widget>
        </item>

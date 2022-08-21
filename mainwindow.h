@@ -22,6 +22,7 @@ private:
     Ui::MainWindow *ui;
     Uart * myUart;
     void updateParameter();
+    ParamManage param;
 };
 
 #endif // MAINWINDOW_H

@@ -4,25 +4,25 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    myUart(&Uart::getInstance())
+    myUart(&Uart::getInstance()),
+    param(ParamManage::getInstance())
 {
     ui->setupUi(this);
 
+    //set param
     ValueDelegate* delegate = new ValueDelegate(this);
-    ParamManage param = ParamManage::getInstance();
     ui->parameterView->setModel(param.model());
     ui->parameterView->expandAll();
     ui->parameterView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->parameterView->setItemDelegate(delegate);
     ui->parameterView->setEditTriggers(QAbstractItemView::AllEditTriggers);
 
-
+    //applyButton
     connect(ui->applyButton, &QPushButton::clicked, this, [=] {
         //on apply action, update the Json root and parameter struct and enable the new parameter
         ParamManage::getInstance().updateJsonRoot();
         ParamManage::getInstance().writeJsonToFile("settings.json");
         updateParameter();
-
     });
 
 
