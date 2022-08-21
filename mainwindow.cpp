@@ -17,6 +17,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->parameterView->setItemDelegate(delegate);
     ui->parameterView->setEditTriggers(QAbstractItemView::AllEditTriggers);
 
+    ResultModel* result = new ResultModel(this);
+    ui->resultView->setFont(QFont("", 16));
+    ui->resultView->setModel(result);
+    ui->resultView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->resultView->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->resultView->setAlternatingRowColors(true);
+
+
     //applyButton
     connect(ui->applyButton, &QPushButton::clicked, this, [=] {
         //on apply action, update the Json root and parameter struct and enable the new parameter
@@ -25,6 +33,13 @@ MainWindow::MainWindow(QWidget *parent) :
         updateParameter();
     });
 
+    //display image
+    connect(&DisplayImage::getInstance(), &DisplayImage::sendImage, [=] (QImage image) {
+        if(ui->pictureLabel->width() / ui->pictureLabel->height() > image.width() / image.height())
+            ui->pictureLabel->setPixmap(QPixmap::fromImage(image.scaled(image.width() * ui->pictureLabel->height() / image.height(), ui->pictureLabel->height())));
+        else
+            ui->pictureLabel->setPixmap(QPixmap::fromImage(image.scaled(ui->pictureLabel->width(), image.height() * ui->pictureLabel->width() / image.width())));
+    });
 
 }
 
@@ -43,3 +58,4 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+

@@ -5,6 +5,11 @@
 #include "UartNet/Uart.h"
 #include "JsonWork/ParamManage.h"
 #include "Delegates/ValueDelegate.h"
+#include "TableModel/ResultModel.h"
+#include <QDir>
+#include <opencv4/opencv2/opencv.hpp>
+#include <opencv4/opencv2/highgui.hpp>
+#include "DisplayImage/DisplayImage.h"
 
 namespace Ui {
 class MainWindow;

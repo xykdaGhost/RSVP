@@ -35,7 +35,9 @@ SOURCES += \
     Delegates/ChooseEditor.cpp \
     Delegates/PathEditor.cpp \
     Delegates/ValueDelegate.cpp \
-    Delegates/ValueEditor.cpp
+    Delegates/ValueEditor.cpp \
+    TableModel/ResultModel.cpp \
+    DisplayImage/DisplayImage.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -48,7 +50,11 @@ HEADERS += \
     Delegates/ChooseEditor.h \
     Delegates/PathEditor.h \
     Delegates/ValueDelegate.h \
-    Delegates/ValueEditor.h
+    Delegates/ValueEditor.h \
+    Camera/GenCamera.h \
+    Camera/Camera.h \
+    TableModel/ResultModel.h \
+    DisplayImage/DisplayImage.h
 
 FORMS += \
         mainwindow.ui
@@ -59,3 +65,20 @@ INCLUDEPATH += $$PWD/../../Documents/vcpkg/installed/x64-linux/include
 DEPENDPATH += $$PWD/../../Documents/vcpkg/installed/x64-linux/include
 
 unix:!macx: PRE_TARGETDEPS += $$PWD/../../Documents/vcpkg/installed/x64-linux/lib/libjsoncpp.a
+
+unix:!macx: LIBS += -L$$/opt/pylon/lib/ -lpylonbase
+unix:!macx: LIBS += -L$$/opt/pylon/lib/ -lgxapi
+unix:!macx: LIBS += -L$$/opt/pylon/lib/ -lGCBase_gcc_v3_1_Basler_pylon
+unix:!macx: LIBS += -L$$/opt/pylon/lib/ -lGenApi_gcc_v3_1_Basler_pylon
+
+INCLUDEPATH += $$PWD/../../../../opt/pylon/include
+DEPENDPATH += $$PWD/../../../../opt/pylon/include
+
+unix:!macx: LIBS += -L$$/usr/local/lib/ -lopencv_photo
+unix:!macx: LIBS += -L$$PWD/../../../../usr/local/lib/ -lopencv_core
+unix:!macx: LIBS +=  -lopencv_imgproc
+unix:!macx: LIBS +=  -lopencv_imgcodecs
+
+INCLUDEPATH += $$/usr/local/include
+DEPENDPATH += $$/usr/local/include
+
