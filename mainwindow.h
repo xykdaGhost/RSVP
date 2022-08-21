@@ -2,7 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "UartNet/uart.h"
+#include "UartNet/Uart.h"
+#include "JsonWork/ParamManage.h"
+#include "Delegates/ValueDelegate.h"
 
 namespace Ui {
 class MainWindow;
@@ -19,6 +21,7 @@ public:
 private:
     Ui::MainWindow *ui;
     Uart * myUart;
+    void updateParameter();
 };
 
 #endif // MAINWINDOW_H

@@ -7,7 +7,37 @@ MainWindow::MainWindow(QWidget *parent) :
     myUart(&Uart::getInstance())
 {
     ui->setupUi(this);
+
+    ValueDelegate* delegate = new ValueDelegate(this);
+    ParamManage param = ParamManage::getInstance();
+    ui->parameterView->setModel(param.model());
+    ui->parameterView->expandAll();
+    ui->parameterView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->parameterView->setItemDelegate(delegate);
+    ui->parameterView->setEditTriggers(QAbstractItemView::AllEditTriggers);
+
+
+    connect(ui->applyButton, &QPushButton::clicked, this, [=] {
+        //on apply action, update the Json root and parameter struct and enable the new parameter
+        ParamManage::getInstance().updateJsonRoot();
+        ParamManage::getInstance().writeJsonToFile("settings.json");
+        updateParameter();
+
+    });
+
+
 }
+
+
+/**
+ * @brief Enable the latest parameter, e.g. camera parameters, alg parameters etc.
+ */
+void MainWindow::updateParameter() {
+    struct ParameterModel::Parameter& param = ParamManage::getInstance().model()->paramStruct();
+//    GenCamera& cam = GenCamera::getInstance();
+//    FileCamera::getInstance().setDir();
+}
+
 
 MainWindow::~MainWindow()
 {

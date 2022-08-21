@@ -1,4 +1,4 @@
-#include "uart.h"
+#include "Uart.h"
 
 Uart::Uart(QObject *parent) : QObject(parent) {
     my_thread = new QThread();

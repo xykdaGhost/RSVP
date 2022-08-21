@@ -70,41 +70,6 @@
       </item>
      </layout>
     </item>
-    <item row="8" column="0" colspan="2">
-     <layout class="QHBoxLayout" name="modeButtonLayout">
-      <item>
-       <widget class="QPushButton" name="workModeButton">
-        <property name="text">
-         <string>工作模式</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="showModeButton">
-        <property name="text">
-         <string>演示模式</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="debugModeButton">
-        <property name="text">
-         <string>调试模式</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="13" column="0" colspan="2">
-     <widget class="QTableView" name="resultView">
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>200</height>
-       </size>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="0" colspan="3">
      <widget class="QWidget" name="titleWidget" native="true">
       <property name="maximumSize">
@@ -594,6 +559,41 @@ border-style:none</string>
       </layout>
      </widget>
     </item>
+    <item row="8" column="0" colspan="2">
+     <layout class="QHBoxLayout" name="modeButtonLayout">
+      <item>
+       <widget class="QPushButton" name="workModeButton">
+        <property name="text">
+         <string>工作模式</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="showModeButton">
+        <property name="text">
+         <string>演示模式</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="debugModeButton">
+        <property name="text">
+         <string>调试模式</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="13" column="0" colspan="2">
+     <widget class="QTableView" name="resultView">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>200</height>
+       </size>
+      </property>
+     </widget>
+    </item>
     <item row="14" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <property name="spacing">
@@ -606,23 +606,18 @@ border-style:none</string>
        <number>60</number>
       </property>
       <item>
-       <widget class="QPushButton" name="testButton">
-        <property name="text">
-         <string>TestButton</string>
+       <widget class="QTextBrowser" name="textBrowser">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="tdstButton">
-        <property name="text">
-         <string>Sweeper Stop</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="thstButton">
-        <property name="text">
-         <string>Sweeper Low</string>
+        <property name="maximumSize">
+         <size>
+          <width>1500</width>
+          <height>50</height>
+         </size>
         </property>
        </widget>
       </item>
@@ -630,13 +625,6 @@ border-style:none</string>
        <widget class="QPushButton" name="resetButton">
         <property name="text">
          <string>恢复出厂设置</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="sizeLabel">
-        <property name="text">
-         <string>TextLabel</string>
         </property>
        </widget>
       </item>
@@ -657,7 +645,7 @@ border-style:none</string>
        </size>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="parameterTab">
        <attribute name="title">
@@ -689,7 +677,6 @@ border-style:none</string>
         </item>
        </layout>
       </widget>
-
      </widget>
     </item>
    </layout>

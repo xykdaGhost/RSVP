@@ -27,11 +27,35 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    UartNet/uart.cpp
+    UartNet/Uart.cpp \
+    JsonWork/ParamManage.cpp \
+    TreeModel/ParameterModel.cpp \
+    TreeModel/TreeModel.cpp \
+    TreeModel/TreeItem.cpp \
+    Delegates/ChooseEditor.cpp \
+    Delegates/PathEditor.cpp \
+    Delegates/ValueDelegate.cpp \
+    Delegates/ValueEditor.cpp
 
 HEADERS += \
         mainwindow.h \
-    UartNet/uart.h
+    JsonWork/JsonWork.h \
+    JsonWork/ParamManage.h \
+    UartNet/Uart.h \
+    TreeModel/ParameterModel.h \
+    TreeModel/TreeModel.h \
+    TreeModel/TreeItem.h \
+    Delegates/ChooseEditor.h \
+    Delegates/PathEditor.h \
+    Delegates/ValueDelegate.h \
+    Delegates/ValueEditor.h
 
 FORMS += \
         mainwindow.ui
+
+unix:!macx: LIBS += -L$$PWD/../../Documents/vcpkg/installed/x64-linux/lib/ -ljsoncpp
+
+INCLUDEPATH += $$PWD/../../Documents/vcpkg/installed/x64-linux/include
+DEPENDPATH += $$PWD/../../Documents/vcpkg/installed/x64-linux/include
+
+unix:!macx: PRE_TARGETDEPS += $$PWD/../../Documents/vcpkg/installed/x64-linux/lib/libjsoncpp.a
