@@ -34,8 +34,10 @@ void DisplayImage::acquireImage(bool dir, ResultModel* model) {
     QString fileName = QString::fromStdString(paramManage.model()->paramStruct().camera.path) +"/raw/" + dirList[fileNum];
     //read the image
     cv::Mat image;
-    image = cv::imread(fileName.toStdString(), cv::IMREAD_UNCHANGED);
+    quint8* img;
+    image = cv::imread(fileName.toStdString(), cv::IMREAD_COLOR);
     QImage sendimage(QSize(2432, 896), QImage::Format::Format_RGB888);
+
 
     //yolo part
         std::vector<std::pair<int, double>> detectRes;
@@ -43,8 +45,13 @@ void DisplayImage::acquireImage(bool dir, ResultModel* model) {
 //        if (GLOBAL_YOLO) { _yoloAlg->handleImage(image, detectRes, _dirList[_fileNum].left(_dirList[_fileNum].size() - 4).toStdString(), paramManage.model()->paramStruct().capture.savePath + "/res/ylabel/"); }
 
     //convert the image from cv::Mat in 16bits to QImage in 8bits for display
-    quint16* img16 = (quint16*)image.data;
-    for(int i = 0; i < 2432*896*3; i++) { sendimage.bits()[i] = img16[i] >> 8; }
+//    quint16* img16 = (quint16*)image.data;
+//    for(int i = 0; i < 2432*896*3; i++) { sendimage.bits()[i] = img16[i] >> 8; }
+    img = (quint8*)image.data;
+    for(int i = 0; i < 2432*896; i++) { sendimage.bits()[i] = img[i+2432*896*2]; }
+    for(int i = 2432*896; i < 2432*896*2; i++) { sendimage.bits()[i] = img[i]; }
+    for(int i = 2432*896*2; i < 2432*896*3; i++) { sendimage.bits()[i] = img[i-2432*896*2]; }
+
     model->setData(detectRes);
     emit sendImage(sendimage);
 }
