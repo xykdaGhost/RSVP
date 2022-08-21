@@ -7,6 +7,7 @@
 #include "Delegates/ValueDelegate.h"
 #include "TableModel/ResultModel.h"
 #include <QDir>
+#include <opencv4/opencv2/opencv_modules.hpp>
 #include <opencv4/opencv2/opencv.hpp>
 #include <opencv4/opencv2/highgui.hpp>
 #include "DisplayImage/DisplayImage.h"

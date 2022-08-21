@@ -22,24 +22,25 @@
 /**
  * @brief An implement of Camera interface, get pictures from file
  */
-class DisplayImage {
+class DisplayImage : public QObject {
     Q_OBJECT
 public:
     static DisplayImage& getInstance() {
         static DisplayImage displayImage;
         return displayImage;
     }
-    ~DisplayImage() override;
-    void acquireImage(ResultModel* model = nullptr) override {};
-//    void setExposure(int exposure) override {};
-//    void setGain(int gain) override {};
-    void setROI(int x, int y, int weight, int height) override {};
+
+    void acquireImage(bool dir, ResultModel* model);
+//    void setExposure(int exposure);
+    void setROI(int x, int y, int weight, int height);
     void setDir();
     void clearDir();
-    void acquireImage(bool dir, QTableWidget* widget = nullptr, ResultModel* model = nullptr);
+
+signals:
+    void sendImage(QImage image);
 
 private:
-    FileCamera(QObject* parent = nullptr);
+    DisplayImage(QObject* parent = nullptr);
     QDir imageDir;
     QStringList dirList;
     int fileNum;

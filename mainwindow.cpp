@@ -41,6 +41,11 @@ MainWindow::MainWindow(QWidget *parent) :
             ui->pictureLabel->setPixmap(QPixmap::fromImage(image.scaled(ui->pictureLabel->width(), image.height() * ui->pictureLabel->width() / image.width())));
     });
 
+    connect(ui->nextButton, &QPushButton::clicked, this, [=] {
+            DisplayImage::getInstance().acquireImage(true, result);
+            qDebug() << "click nextButton";
+    });
+
 }
 
 

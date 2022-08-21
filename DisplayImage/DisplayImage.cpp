@@ -5,16 +5,9 @@
  */
 DisplayImage::DisplayImage(QObject* parent) :
         imageDir(QString::fromStdString(ParamManage::getInstance().model()->paramStruct().camera.path)),
-        dirList(_dir.entryList(QDir::Files)),
-        fileNum(-1),
+        dirList(imageDir.entryList(QDir::Files)),
+        fileNum(-1){setDir();}
         //_yoloAlg(new AlgYolov5s()){setDir();}
-
-/**
- * @brief Destructor of FileCamera
- */
-DisplayImage::~DisplayImage() {}
-
-
 
 /**
  * @brief Acquire an image from camera and sen it out if needed.
@@ -22,7 +15,7 @@ DisplayImage::~DisplayImage() {}
  *          @arg : true : next image
  *          @arg : false : previous image
  */
-void DisplayImage::acquireImage(bool dir, QTableWidget* widget, ResultModel* model) {
+void DisplayImage::acquireImage(bool dir, ResultModel* model) {
     ParamManage paramManage = ParamManage::getInstance();
     if(dirList.empty())
         return;
@@ -38,11 +31,11 @@ void DisplayImage::acquireImage(bool dir, QTableWidget* widget, ResultModel* mod
 
 
     //get the particular image file name from the file list
-    QString fileName = QString::fromStdString(paramManage.model()->paramStruct().camera.path) +"/raw/" + _dirList[_fileNum];
+    QString fileName = QString::fromStdString(paramManage.model()->paramStruct().camera.path) +"/raw/" + dirList[fileNum];
     //read the image
     cv::Mat image;
-    image = cv::imread(FileName.toStdString(), cv::IMREAD_UNCHANGED);
-    QImage sendimage(QSxize(2432, 896), QImage::Format::Format_RGB888);
+    image = cv::imread(fileName.toStdString(), cv::IMREAD_UNCHANGED);
+    QImage sendimage(QSize(2432, 896), QImage::Format::Format_RGB888);
 
     //yolo part
         std::vector<std::pair<int, double>> detectRes;
