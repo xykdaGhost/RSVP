@@ -37,7 +37,10 @@ SOURCES += \
     Delegates/ValueDelegate.cpp \
     Delegates/ValueEditor.cpp \
     TableModel/ResultModel.cpp \
-    DisplayImage/DisplayImage.cpp
+    DisplayImage/DisplayImage.cpp \
+    Camera/WriteImageThread.cpp \
+    Camera/GenCamera.cpp \
+    AutoExpo/AutoExpo.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -54,7 +57,9 @@ HEADERS += \
     Camera/GenCamera.h \
     Camera/Camera.h \
     TableModel/ResultModel.h \
-    DisplayImage/DisplayImage.h
+    DisplayImage/DisplayImage.h \
+    Camera/WriteImageThread.h \
+    AutoExpo/AutoExpo.h
 
 FORMS += \
         mainwindow.ui

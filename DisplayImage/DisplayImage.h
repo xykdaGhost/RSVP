@@ -18,6 +18,8 @@
 #include <QDebug>
 #include <vector>
 #include "../TableModel/ResultModel.h"
+#include <QDebug>
+#include <QThread>
 
 /**
  * @brief An implement of Camera interface, get pictures from file
@@ -44,6 +46,7 @@ private:
     QDir imageDir;
     QStringList dirList;
     int fileNum;
+    QThread *my_thread;
 
 //    AlgYolov5s* _yoloAlg;
 };
