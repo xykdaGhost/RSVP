@@ -1,6 +1,6 @@
 #ifndef JSONWORK_H
 #define JSONWORK_H
-#include "/home/xyk/Documents/vcpkg/installed/x64-linux/include/json/json.h"
+#include <json/json.h>
 
 class JsonWork {
 public:

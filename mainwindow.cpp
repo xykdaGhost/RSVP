@@ -5,6 +5,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     myUart(&Uart::getInstance()),
+    _analysis(false),
     param(ParamManage::getInstance())
 {
     ui->setupUi(this);
@@ -24,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->resultView->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->resultView->setAlternatingRowColors(true);
 
+    //interact part
 
     //applyButton
     connect(ui->applyButton, &QPushButton::clicked, this, [=] {
@@ -34,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
     });
 
     //display image
-    connect(&DisplayImage::getInstance(), &DisplayImage::sendImage, [=] (QImage image) {
+    connect(&FileCamera::getInstance(), &FileCamera::sendImage, [=] (QImage image) {
         if(ui->pictureLabel->width() / ui->pictureLabel->height() > image.width() / image.height())
             ui->pictureLabel->setPixmap(QPixmap::fromImage(image.scaled(image.width() * ui->pictureLabel->height() / image.height(), ui->pictureLabel->height())));
         else
@@ -42,8 +44,7 @@ MainWindow::MainWindow(QWidget *parent) :
     });
 
     connect(ui->nextButton, &QPushButton::clicked, this, [=] {
-            DisplayImage::getInstance().acquireImage(true, result);
-            qDebug() << "click nextButton";
+        FileCamera::getInstance().acquireImage(true, result);
     });
 
 }

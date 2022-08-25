@@ -118,13 +118,11 @@ void GenCamera::openCamera() {
         cv::invert(M, M_1);
 
         emit sendStatus("已连接");
-//        GLOBAL_CAMERACONNECT = 1;
     }  catch (const GenericException& e) {
         // Error handling.
         std::cerr << "An exception occurred." << std::endl
             << e.GetDescription() << std::endl;
         emit sendStatus("未连接");
-//        GLOABL_CAMERACONNECT = 0;
     }
 }
 
@@ -293,10 +291,6 @@ void GenCamera::acquireImage(ResultModel* model) {
         cv::Mat image(ptr->GetHeight(), ptr->GetWidth(), CV_16UC1, ptr->GetBuffer());
         if(image.empty()) { return; }
 
-
-        //convert the image from bayer to rgb
-        cvtColor(image, image, cv::COLOR_BayerRG2RGB);
-
 //2021.10.20 lmd
         //cv::Mat expoImage = image(cv::Rect(0, 0, 2432, 329));
         /*
@@ -357,21 +351,22 @@ void GenCamera::acquireImage(ResultModel* model) {
             cv::Mat writeImage = target.clone(); // expo
             WriteImageThread* thread = new WriteImageThread(writeImage, writeName);
             thread->start();
-
-//            if (param.model()->paramStruct().alg.yolo) {
-//                _yoloAlg->handleImage(target, detectRes, photoName, paramManage.model()->paramStruct().capture.savePath + "/" +current_time.toStdString() + "/res/ylabel/");
-//                model->setData(detectRes);
-//                SerialPort::getInstance().ack_level();
-//            }
-        } else {
-//            if (param.model()->paramStruct().alg.yolo) {
-//                target.convertTo(target, CV_16UC3);
-//                target = target * 16;
-//                _yoloAlg->handleImage(target, detectRes, photoName, paramManage.model()->paramStruct().capture.savePath + "/" +current_time.toStdString() + "/res/ylabel/");
-//                model->setData(detectRes);
-//                SerialPort::getInstance().ack_level();
-//            }
         }
+        if (param.model()->paramStruct().alg.yolo) {
+//            _yoloAlg->handleImage(target, target, detectRes, photoName, param.model()->paramStruct().capture.savePath + "/" +current_time.toStdString() + "/res/ylabel/");
+            model->setData(detectRes);
+
+//            SerialPort::getInstance().ack_level();
+        }
+
+        //convert the image from cv::Mat in 16bits to QImage in 8bits for display
+        cvtColor(image, image, cv::COLOR_BayerRG2RGB);
+        QImage sendimage(QSize(2432, 896), QImage::Format::Format_RGB888);
+        quint16* img16 = (quint16*)target.data;
+        for(int i = 0; i < 2432*896*3; i++) { sendimage.bits()[i] = img16[i] >> 8; }
+
+
+        emit sendImage(sendimage);
 
 
 
@@ -379,7 +374,7 @@ void GenCamera::acquireImage(ResultModel* model) {
         expoImage.convertTo(expoImage, CV_8UC3);
         //
         cv::Mat gray;
-        cv::cvtColor(expoImage, gray, COLOR_RGB2GRAY);
+        cv::cvtColor(expoImage, gray, COLOR_BGR2GRAY);
         vector<float> aecRes =autoExpo->getMyNextExpTime(gray, param.model()->paramStruct().aec.speed);
         //
         photo_name_expo_time = aecRes[0]*1000;

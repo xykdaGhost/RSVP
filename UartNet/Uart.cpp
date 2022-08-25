@@ -44,3 +44,7 @@ void Uart::handle_data() {
     qDebug() << "handing thread is:" << QThread::currentThreadId();
 
 }
+
+int Uart::msgAnalysis(QByteArray data) {
+
+}

@@ -1,0 +1,28 @@
+{
+   "aec" : {
+      "expTime" : 5000,
+      "mannualExpTime" : 0,
+      "mannualGain" : 50,
+      "speed" : 5
+   },
+   "alg" : {
+      "autoExpo" : true,
+      "hdr" : false,
+      "yolo" : true
+   },
+   "camera" : {
+      "gain" : 50,
+      "height" : 1225,
+      "offsetX" : 8,
+      "offsetY" : 0,
+      "path" : "/home/mv/release",
+      "width" : 2432
+   },
+   "capture" : {
+      "interval" : 4000,
+      "savePath" : "/home/mv/release/install/pics",
+      "saveRaw" : true,
+      "saveRawInterval" : 4000,
+      "trigger" : true
+   }
+}

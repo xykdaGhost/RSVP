@@ -10,7 +10,10 @@
 #include <opencv4/opencv2/opencv_modules.hpp>
 #include <opencv4/opencv2/opencv.hpp>
 #include <opencv4/opencv2/highgui.hpp>
-#include "DisplayImage/DisplayImage.h"
+#include "Camera/FileCamera.h"
+#include "Camera/GenCamera.h"
+
+#include <QThread>
 
 namespace Ui {
 class MainWindow;
@@ -29,6 +32,7 @@ private:
     Uart * myUart;
     void updateParameter();
     ParamManage param;
+    bool _analysis;
 };
 
 #endif // MAINWINDOW_H

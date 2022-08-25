@@ -14,7 +14,7 @@
 class ParamManage : public JsonWork {
 public:
     static ParamManage& getInstance() {
-        static ParamManage paramManage("settings.json");
+        static ParamManage paramManage("/home/xyk/QtProject/settings.json");
         return paramManage;
     }
     ~ParamManage() override { };

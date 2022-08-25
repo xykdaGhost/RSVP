@@ -34,7 +34,6 @@ public:
     void setGain(int gain) override;
     void setROI(int x, int y, int width, int height) override;
     void setFixWhiteBalance(bool flag = true);
-
     void openCamera();
 
 private:
@@ -48,10 +47,8 @@ private:
 //    AlgYolov5s* _yoloAlg;
 
     void grabbingPics();
-    QString getRandomString(int length);
     float lastt12=0;
     cv::Mat M_1,M;
-
     ParamManage param;
     QThread * my_thread;
 };
