@@ -43,6 +43,7 @@ public slots:
     void ask_reset();
     void ask_mode(char mode);
     void ask_runANDstop(char m);
+    void ack_search();
 
 signals:
     void receive_data(QByteArray tmp);

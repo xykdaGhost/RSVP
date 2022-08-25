@@ -1,5 +1,5 @@
 #include "CanFrame.h"
-#include <linux/can/error.h>5
+#include <linux/can/error.h>
 /**
  * @brief Constructor of CanFrame
  */

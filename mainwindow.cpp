@@ -295,6 +295,12 @@ void MainWindow::on_receive(QByteArray tmpdata) {
                     _serialPort->ack_status();
                 }
 
+            } else if (tmpdata[2] == 0x63) {
+                if (tmpdata[3] == 0x01) {
+                    _serialPort->ack_search();
+                } else if (tmpdata[3] == 0x20) {
+                    _serialPort->ack_heart();
+                }
             }
 
 

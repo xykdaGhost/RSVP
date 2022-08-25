@@ -115,9 +115,9 @@ void SerialPort::ack_heart() {
     data.resize(6);
     data[0] = 0xea;
     data[1] = 0x02;
-    data[2] = 0x80;
-    data[3] = 0x92;
-    data[4] = 0x12;
+    data[2] = 0xe3;
+    data[3] = 0x20;
+    data[4] = (data[2]+data[3])%256;
     data[5] = 0xeb;
     port->write(data, 6);
 
@@ -270,7 +270,7 @@ void SerialPort::ack_status() {
 void SerialPort::ask_interval(short saveInterval, short shootInterval) {
     qDebug() << "set interval";
     QByteArray data;
-    data.resize(6);
+    data.resize(10);
     data[0] = 0xea;
     data[1] = 0x06;
     data[2] = 0x00;
@@ -307,7 +307,7 @@ void SerialPort::ask_reset() {
 void SerialPort::ask_mode(char m) {
     qDebug() << "set mode";
     QByteArray data;
-    data.resize(6);
+    data.resize(7);
     data[0] = 0xea;
     data[1] = 0x03;
     data[2] = 0x00;
@@ -321,7 +321,7 @@ void SerialPort::ask_mode(char m) {
 void SerialPort::ask_runANDstop(char m) {
     qDebug() << "set run and srop";
     QByteArray data;
-    data.resize(6);
+    data.resize(7);
     data[0] = 0xea;
     data[1] = 0x03;
     data[2] = 0x00;
@@ -332,6 +332,20 @@ void SerialPort::ask_runANDstop(char m) {
     port->write(data, 7);
 }
 
+
+void SerialPort::ack_search() {
+    QByteArray data;
+    data.resize(6);
+    data[0] = 0xea;
+    data[1] = 0x02;
+    data[2] = 0xe3;
+    data[3] = 0x01;
+    data[4] = (data[2]+data[3])%256;
+    data[5] = 0xeb;
+    port->write(data, 6);
+
+    qDebug() << "ack serach";
+}
 
 
 
