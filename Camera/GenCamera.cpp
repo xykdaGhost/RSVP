@@ -139,7 +139,9 @@ GenCamera::~GenCamera() {
         std::cerr << "An exception occurred." << std::endl
             << e.GetDescription() << std::endl;
     }
-
+    my_thread->quit();
+    my_thread->wait();
+    my_thread->deleteLater();
 }
 
 /**
@@ -270,7 +272,6 @@ void GenCamera::acquireImage(ResultModel* model) {
                     else {
                         cout << "Error: " << ptr->GetErrorCode() << " " << _ptrGrabBuffer->GetErrorDescription() << endl; //·Çµ÷ÊÔœ×¶ÎÊ¹ÓÃ×îºÃ×¢ÊÍµô
                     }
-
                 }
             }
         }

@@ -38,6 +38,11 @@ bool Uart::getStauts() {
     return connectStauts;
 }
 
+void SerialPort::writeArray(int len, const uchar * array) {
+    qDebug() << "write_id is:" << QThread::currentThreadId();
+    port->write((const char *)array, len);
+}
+
 void Uart::handle_data() {
     QByteArray data = port->readAll();
     qDebug() << QStringLiteral("data received(收到的数据):") << data;
@@ -46,5 +51,19 @@ void Uart::handle_data() {
 }
 
 int Uart::msgAnalysis(QByteArray data) {
+    int commandKeyWord = (data[2] << 8) + data[3];
 
+    switch (commandKeyWord)
+    {
+    case COMMAND_SEARCH:
+        writeArray(6, ACK_SEARCH);
+        break;
+    case COMMAND_GETSHOOT:
+        GenCamera::getInstance().acquireImage(ResultModel result);
+        break;
+    case COMMAND_CONTROL:
+        qDebug() << "收到停止/启动";
+    default:
+        break;
+    }
 }
